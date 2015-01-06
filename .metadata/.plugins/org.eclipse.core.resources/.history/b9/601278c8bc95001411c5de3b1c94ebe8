@@ -1,0 +1,16 @@
+package edu.neumont.csc380;
+
+public class RaceCar {
+
+	private int id;
+	private String make;
+	private String model;
+	private int horsePower;
+	private double quarterMileTime;
+	
+	public RaceCar(int id, String make, String model, int horsePower, double quarterMileTime){
+		
+		
+	}
+	
+}
