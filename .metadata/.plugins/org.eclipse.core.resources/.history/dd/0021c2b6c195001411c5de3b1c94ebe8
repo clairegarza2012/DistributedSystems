@@ -9,9 +9,6 @@ import java.io.PrintStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-import com.hallaLib.HallaStor;
-import com.hallaLib.HallaZip;
-
 public class Server {
 
 	/* The server should provide simple CRUD operations for a key/value store. 
@@ -48,10 +45,6 @@ public class Server {
 				String line = buffReader.readLine();
 				System.out.println(line);
 			}
-			
-			HallaStor store = HallaStor.getInstance();
-			HallaZip zip = new HallaZip();
-			
 			
 			ss.close();
 			serverSocket.close();
