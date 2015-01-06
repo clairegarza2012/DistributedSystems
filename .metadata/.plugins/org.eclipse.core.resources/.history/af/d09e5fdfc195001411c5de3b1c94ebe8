@@ -20,16 +20,11 @@ public class Server {
 	
 	public static void main(String[] args){
 		
-		try {
-			new Server();
-		
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		new Server();
 	}
 	
-	public Server() throws IOException{
-		
+	public Server(){
+		try {
 			ServerSocket ss = new ServerSocket(2222); // 2222 is the port
 			
 			System.out.println("server socket created");
@@ -61,7 +56,9 @@ public class Server {
 			ss.close();
 			serverSocket.close();
 			
-		
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 }
