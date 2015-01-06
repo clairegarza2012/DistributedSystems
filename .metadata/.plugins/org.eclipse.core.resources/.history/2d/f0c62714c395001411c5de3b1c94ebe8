@@ -39,10 +39,10 @@ public class RaceCar {
 
 	@Override
 	public String toString() {
-		return "RaceCar [id(int)=" + id + ", make=" + make + ", model=" + model
+		
+		return "RaceCar [id=" + id + ", make=" + make + ", model=" + model
 				+ ", horsePower=" + horsePower + ", quarterMileTime="
 				+ quarterMileTime + "]";
 	}
-
 	
 }

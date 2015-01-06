@@ -37,12 +37,4 @@ public class RaceCar {
 		return quarterMileTime;
 	}
 
-	@Override
-	public String toString() {
-		return "RaceCar [id(int)=" + id + ", make=" + make + ", model=" + model
-				+ ", horsePower=" + horsePower + ", quarterMileTime="
-				+ quarterMileTime + "]";
-	}
-
-	
 }

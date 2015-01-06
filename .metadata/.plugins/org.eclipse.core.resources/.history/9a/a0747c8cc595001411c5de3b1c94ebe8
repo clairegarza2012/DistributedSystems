@@ -1,0 +1,39 @@
+package edu.neumont.csc380;
+
+public class Protocol {
+
+	public Protocol(){
+		
+	}
+	
+	public String protocolRacecar(RaceCar car){
+		
+		int id = car.getId();
+		String make = car.getMake();
+		String model = car.getModel();
+		int horsePower = car.getHorsePower();
+		double quarterMileTime = car.getQuarterMileTime();
+		
+		String proId = Integer.toBinaryString(id);
+		proId = proId.length() + proId;
+		
+		return car.toString();
+	}
+	
+	public RaceCar deprotocolRacecar(String racecarProtocol){
+		
+		// id : first is the length of the binary string to get the id int value
+		// then the 
+		
+		
+	}
+	
+	public String protocolDriver(Driver driver){
+		
+		return driver.toString();
+	}
+	
+	public Driver deprotocolDriver(String driverProtocol){
+		
+	}
+}
