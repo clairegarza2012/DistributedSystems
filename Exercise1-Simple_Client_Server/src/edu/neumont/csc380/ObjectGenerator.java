@@ -6,30 +6,32 @@ public class ObjectGenerator {
 
 	private static Random ran = new Random();
 	
-	public static HallaStorObject generate(){
+	public static String generate(){
 		
-		HallaStorObject obj = null;
+		String obj = null;
 		
 		int i = ran.nextInt(2);
 		
+		Protocol protocol = new Protocol();
+		
 		if (i == 0){
-			obj = makeRacecar();
+			obj = protocol.protocolRacecar(makeRacecar());
 		}
 		else {
-			obj = makeDriver();
+			obj = protocol.protocolDriver(makeDriver());
 		}
 		
 		return obj;
 	}
 
-	private static HallaStorObject makeRacecar() {
+	private static RaceCar makeRacecar() {
 
-		return null;
+		return RacecarFactory.makeCar();
 	}
 	
-	private static HallaStorObject makeDriver() {
+	private static Driver makeDriver() {
 
-		return null;
+		return DriverFactory.makeDriver();
 	}
 	
 	

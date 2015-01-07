@@ -13,11 +13,25 @@ public class RacecarFactory {
 		int horsepower = 0;
 		double quarterMileTime = 0.0;
 
+		make = getMake();
 		
+		model = getModel();
 		
+		horsepower = ran.nextInt(1800);
+		
+		quarterMileTime = ran.nextInt(3000) + ran.nextDouble();
 		
 		return new RaceCar(make, model, horsepower, quarterMileTime);
 	}
-	
+
+	private static String getMake() {
+
+		return "";
+	}
+
+	private static String getModel() {
+		
+		return "";
+	}
 	
 }

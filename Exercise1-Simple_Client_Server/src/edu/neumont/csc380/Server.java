@@ -50,27 +50,40 @@ public class Server {
 		Protocol protocol = new Protocol();
 
 		while (true){
+			
 			while (buffReader.ready()){
+				
 				String line = buffReader.readLine();
 
 				System.out.println("Message Recieved!\n" + Integer.parseInt(line.substring(2, 18), 2));
 
 				char operation = line.charAt(0);
 
-				char objProposition = line.charAt(1);
+				String object = line.substring(1);
 
-				String object = line.substring(2);
+				System.out.println("Object: " + object);
+				
+				try{
+					Object obj = doOperation(operation, object, protocol);
 
-				Object obj = doOperation(operation, object, objProposition, protocol);
-
-				if (obj != null){
-					ps.println("From Server: " + obj.toString());
-					System.out.println("Sent message to Client");
+					if (obj != null){
+						ps.println("From Server: " + obj.toString());
+						System.out.println("Sent message to Client");
+					}
+				
+					ps.println("sucessful!");
+					System.out.println("sucessful!");
+					
+				} catch (IllegalStateException e){
+					ps.println("Server Is Full!");
+					System.out.println("Server is full!");
+					
 				}
 
 			}
 
 			// How do you know when the server is full?
+				// the server will throw an error
 			
 			// If server is full,
 				// tell client to stop making objects
@@ -80,25 +93,12 @@ public class Server {
 		//serverSocket.close();
 	}
 
-	private HallaStorObject getObject(char objProposition, String object, Protocol protocol) {
-
-		HallaStorObject obj = null; 
-
-		if (objProposition == 'r'){
-			obj = protocol.deprotocolRacecar(object);
-		}else if (objProposition == 'd'){
-			obj = protocol.deprotocolDriver(object);
-		}
-
-		return obj;
-	}
-
-	private Object doOperation(char operation, String object, char objectProposition, Protocol protocol) {
+	private Object doOperation(char operation, String object, Protocol protocol) {
 
 		Object o = null;
 
 		if (operation == 'c' || operation == 'u'){
-			HallaStorObject obj = getObject(objectProposition, object, protocol);
+			HallaStorObject obj = protocol.deprotocolObject(object);
 
 			if (operation == 'c') {
 				create(obj); 
@@ -108,7 +108,7 @@ public class Server {
 			}
 		}
 		else if (operation == 'r' || operation == 'd'){
-			int id = Integer.parseInt(object, 2);
+			int id = Integer.parseInt(object.substring(1), 2);
 
 			if (operation == 'r') {
 				o = read(id);

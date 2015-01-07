@@ -8,6 +8,21 @@ public class Protocol {
 	public Protocol(){
 		
 	}
+
+	public HallaStorObject deprotocolObject(String object){
+		
+		HallaStorObject obj = null;
+		
+		char objectProposition = object.charAt(0);
+		
+		if (objectProposition == 'r'){
+			obj = deprotocolRacecar(object);
+		}else{
+			obj = deprotocolDriver(object);
+		}
+		
+		return obj;
+	}
 	
 	public String protocolRacecar(RaceCar car){
 		
@@ -28,21 +43,6 @@ public class Protocol {
 		String proQuarterMileTime = "" + quarterMileTime;
 		
 		return "r" + proId + proMake + proModel + proHorsePower + proQuarterMileTime;
-	}
-	
-	public HallaStorObject deprotocolObject(String object){
-		
-		HallaStorObject obj = null;
-		
-		char objectProposition = object.charAt(0);
-		
-		if (objectProposition == 'r'){
-			obj = deprotocolRacecar(object);
-		}else{
-			obj = deprotocolDriver(object);
-		}
-		
-		return obj;
 	}
 	
 	public RaceCar deprotocolRacecar(String racecarProtocol){
