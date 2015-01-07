@@ -22,6 +22,8 @@ public class Driver extends HallaStorObject {
 		this.isMale = isMale;
 	}
 	
+	/* Getters */ 
+	
 	public String getName() {
 		return name;
 	}
@@ -32,6 +34,20 @@ public class Driver extends HallaStorObject {
 
 	public boolean isMale() {
 		return isMale;
+	}
+
+	/* Setters */
+	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public void setMale(boolean isMale) {
+		this.isMale = isMale;
 	}
 
 }

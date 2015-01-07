@@ -40,11 +40,13 @@ public class Protocol {
 		
 		int binaryStringLength = 16;
 		// id : a binary string the length of 16
-		int id = Integer.parseInt(racecarProtocol.substring(0, 16)); // first 16 characters .. does not include the character at index 16
+		int id = Integer.parseInt(racecarProtocol.substring(0, binaryStringLength), 2); // first 16 characters .. does not include the character at index 16
+		
+		System.out.println("Id: " + id);
 		
 		int placeInRacecarProtocol = binaryStringLength;
 		
-		int makeLength = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength));
+		int makeLength = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength), 2);
 		
 		placeInRacecarProtocol += binaryStringLength;
 		
@@ -52,7 +54,7 @@ public class Protocol {
 		
 		placeInRacecarProtocol += makeLength;
 		
-		int modelLength = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength));
+		int modelLength = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength), 2);
 		
 		placeInRacecarProtocol += binaryStringLength;
 		
@@ -60,7 +62,7 @@ public class Protocol {
 		
 		placeInRacecarProtocol += modelLength;
 				
-		int horsePower = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength));
+		int horsePower = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength), 2);
 		
 		placeInRacecarProtocol += binaryStringLength;
 		
@@ -98,21 +100,35 @@ public class Protocol {
 		
 		int binaryStringLength = 16;
 		
-		int id = Integer.parseInt(driverProtocol.substring(0, binaryStringLength));
+		int id = Integer.parseInt(driverProtocol.substring(0, binaryStringLength), 2);
+		
+		System.out.println("Id: " + id);
 		
 		int placeInDriverProtocol = binaryStringLength;
 		
-		int nameLength = Integer.parseInt(driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + binaryStringLength));
+		System.out.println("place in driver protocol: " + placeInDriverProtocol);
+		
+		int nameLength = Integer.parseInt(driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + binaryStringLength), 2);
+		
+		System.out.println("Name Length: " + nameLength);
 		
 		placeInDriverProtocol += binaryStringLength;
 				
+		System.out.println("place in driver protocol: " + placeInDriverProtocol);
+		
 		String name = driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + nameLength);
+		
+		System.out.println("Name: " + name);
 		
 		placeInDriverProtocol += nameLength;
 		
-		int age = Integer.parseInt(driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + binaryStringLength));
+		System.out.println("place in driver protocol: " + placeInDriverProtocol);
+		
+		int age = Integer.parseInt(driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + binaryStringLength), 2);
 		
 		placeInDriverProtocol += binaryStringLength;
+		
+		System.out.println("place in driver protocol: " + placeInDriverProtocol);
 		
 		boolean isMale = driverProtocol.substring(placeInDriverProtocol).equals("true") ? true : false;
 		

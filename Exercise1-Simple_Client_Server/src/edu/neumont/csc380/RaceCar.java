@@ -25,6 +25,8 @@ public class RaceCar extends HallaStorObject{
 		this.quarterMileTime = quarterMileTime;
 	}
 	
+	/* Getters */
+	
 	public String getMake() {
 		return make;
 	}
@@ -40,5 +42,24 @@ public class RaceCar extends HallaStorObject{
 	public double getQuarterMileTime() {
 		return quarterMileTime;
 	}
+
+	/* Setters */
+	
+	public void setMake(String make) {
+		this.make = make;
+	}
+
+	public void setModel(String model) {
+		this.model = model;
+	}
+
+	public void setHorsePower(int horsePower) {
+		this.horsePower = horsePower;
+	}
+
+	public void setQuarterMileTime(double quarterMileTime) {
+		this.quarterMileTime = quarterMileTime;
+	}
+	
 	
 }

@@ -15,7 +15,7 @@ public abstract class HallaStorObject {
 	}
 	
 	public HallaStorObject(int id){
-		this.id = id;
+		HallaStorObject.id = id;
 	}
 	
 	public int getId(){
