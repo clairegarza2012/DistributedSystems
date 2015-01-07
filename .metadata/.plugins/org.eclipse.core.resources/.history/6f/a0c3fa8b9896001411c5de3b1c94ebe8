@@ -1,0 +1,36 @@
+package edu.neumont.csc380;
+
+import java.util.Random;
+
+public class ObjectGenerator {
+
+	private Random ran = new Random();
+	
+	public String generateObject(){
+		
+		String string = "";
+		
+		int i = ran.nextInt(2);
+		
+		if (i == 0){
+			string = "r" + makeRacecar();
+		}
+		else {
+			string = "d" + makeDriver();
+		}
+		
+		return string;
+	}
+
+	private String makeRacecar() {
+
+		return null;
+	}
+	
+	private String makeDriver() {
+
+		return null;
+	}
+	
+	
+}

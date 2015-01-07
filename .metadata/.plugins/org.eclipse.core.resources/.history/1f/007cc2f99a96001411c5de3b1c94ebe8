@@ -1,0 +1,19 @@
+package edu.neumont.csc380;
+
+import java.util.Random;
+
+public class RacecarFactory {
+	
+	private static Random ran = new Random();
+	
+	public static RaceCar makeCar(){
+		
+		// 		make model horsepower quartermile time
+		
+		
+		
+		return new RaceCar(make, model, horsepower, quarterMileTime);
+	}
+	
+	
+}

@@ -1,0 +1,8 @@
+package edu.neumont.csc380;
+
+public class RacecarFactory {
+
+	public static RaceCar makecar(){
+		return null;
+	}
+}

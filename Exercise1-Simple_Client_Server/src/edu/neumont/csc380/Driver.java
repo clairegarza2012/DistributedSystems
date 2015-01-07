@@ -50,4 +50,10 @@ public class Driver extends HallaStorObject {
 		this.isMale = isMale;
 	}
 
+	@Override
+	public String toString() {
+		return "Driver [name=" + name + ", age=" + age + ", isMale=" + isMale
+				+ "]";
+	}
+
 }

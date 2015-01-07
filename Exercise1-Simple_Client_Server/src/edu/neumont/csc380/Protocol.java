@@ -25,26 +25,35 @@ public class Protocol {
 		
 		String proHorsePower = String.format("%16s", Integer.toBinaryString(horsePower)).replace(" ", "0");
 		
-//		String quarterMileString = "" + quarterMileTime;
-//	    String[] result = quarterMileString.split("\\.");
-//	    int quarterMileLength = result[0].length() + result[1].length() + 1;
-//		
-//		String proQuarterMileTime = String.format("%16s", Integer.toBinaryString(quarterMileLength)).replace(" ", "0") + quarterMileTime;
-		
 		String proQuarterMileTime = "" + quarterMileTime;
 		
-		return proId + proMake + proModel + proHorsePower + proQuarterMileTime;
+		return "r" + proId + proMake + proModel + proHorsePower + proQuarterMileTime;
+	}
+	
+	public HallaStorObject deprotocolObject(String object){
+		
+		HallaStorObject obj = null;
+		
+		char objectProposition = object.charAt(0);
+		
+		if (objectProposition == 'r'){
+			obj = deprotocolRacecar(object);
+		}else{
+			obj = deprotocolDriver(object);
+		}
+		
+		return obj;
 	}
 	
 	public RaceCar deprotocolRacecar(String racecarProtocol){
 		
 		int binaryStringLength = 16;
-		// id : a binary string the length of 16
-		int id = Integer.parseInt(racecarProtocol.substring(0, binaryStringLength), 2); // first 16 characters .. does not include the character at index 16
 		
-		System.out.println("Id: " + id);
+		int placeInRacecarProtocol = 1;
 		
-		int placeInRacecarProtocol = binaryStringLength;
+		int id = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength), 2); // first 16 characters .. does not include the character at index 16
+				
+		placeInRacecarProtocol += binaryStringLength;
 		
 		int makeLength = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength), 2);
 		
@@ -65,14 +74,7 @@ public class Protocol {
 		int horsePower = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength), 2);
 		
 		placeInRacecarProtocol += binaryStringLength;
-		
-		/* only needed if I add a binary string to the double 
-		 * I got rid of it because I realized I could just get the values at the end.. 
-		 * the remaning values of the string are the double values*/
-//		int quarterMileLength = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength));
-//				
-//		placeInRacecarProtocol += binaryStringLength;
-		
+
 		double quarterMileTime = Double.parseDouble(racecarProtocol.substring(placeInRacecarProtocol));
 						
 		return new RaceCar(id, make, model, horsePower, quarterMileTime);
@@ -93,43 +95,31 @@ public class Protocol {
 		
 		String proIsMale = isMale? "true" : "false"; 
 
-		return proId + proName + proAge + proIsMale;
+		return "d" + proId + proName + proAge + proIsMale;
 	}
 	
 	public Driver deprotocolDriver(String driverProtocol){
 		
 		int binaryStringLength = 16;
 		
-		int id = Integer.parseInt(driverProtocol.substring(0, binaryStringLength), 2);
+		int placeInDriverProtocol = 1;
 		
-		System.out.println("Id: " + id);
-		
-		int placeInDriverProtocol = binaryStringLength;
-		
-		System.out.println("place in driver protocol: " + placeInDriverProtocol);
-		
-		int nameLength = Integer.parseInt(driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + binaryStringLength), 2);
-		
-		System.out.println("Name Length: " + nameLength);
-		
+		int id = Integer.parseInt(driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + binaryStringLength), 2);
+				
 		placeInDriverProtocol += binaryStringLength;
 				
-		System.out.println("place in driver protocol: " + placeInDriverProtocol);
-		
+		int nameLength = Integer.parseInt(driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + binaryStringLength), 2);
+				
+		placeInDriverProtocol += binaryStringLength;
+						
 		String name = driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + nameLength);
-		
-		System.out.println("Name: " + name);
-		
+				
 		placeInDriverProtocol += nameLength;
-		
-		System.out.println("place in driver protocol: " + placeInDriverProtocol);
-		
+				
 		int age = Integer.parseInt(driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + binaryStringLength), 2);
 		
 		placeInDriverProtocol += binaryStringLength;
-		
-		System.out.println("place in driver protocol: " + placeInDriverProtocol);
-		
+				
 		boolean isMale = driverProtocol.substring(placeInDriverProtocol).equals("true") ? true : false;
 		
 		return new Driver(id, name, age, isMale);

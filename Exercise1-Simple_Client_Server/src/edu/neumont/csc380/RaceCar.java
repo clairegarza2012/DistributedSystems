@@ -60,6 +60,11 @@ public class RaceCar extends HallaStorObject{
 	public void setQuarterMileTime(double quarterMileTime) {
 		this.quarterMileTime = quarterMileTime;
 	}
-	
+
+	@Override
+	public String toString() {
+		return "RaceCar [make=" + make + ", model=" + model + ", horsePower="
+				+ horsePower + ", quarterMileTime=" + quarterMileTime + "]";
+	}
 	
 }
