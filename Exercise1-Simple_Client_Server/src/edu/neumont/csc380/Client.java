@@ -8,6 +8,8 @@ import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+import com.hallaLib.HallaStor;
+
 public class Client {
 
 	/* The client will use the server to store and retrieve instances of the following simple POJOs 
@@ -35,9 +37,24 @@ public class Client {
 			OutputStream os = clientSocket.getOutputStream();
 			PrintWriter pw = new PrintWriter(os, true);
 			
+			HallaStor store = HallaStor.getInstance();
+			
+			Protocol protocol = new Protocol();
+			
 			while (buffReader.ready()){
 				String line = buffReader.readLine();
-				line = "Client: " + line;
+				
+				char objProposition = line.charAt(0);
+				
+				String object = line.substring(1);
+				
+				if (objProposition == 'r'){
+					RaceCar car = protocol.deprotocolRacecar(object);
+					store.add("" + car.getId(), car);
+				}else if (objProposition == 'd'){
+					Driver driver = protocol.deprotocolDriver(object);
+					store.add("" + driver.getId(), driver);
+				}
 				
 				pw.println(line);
 			}

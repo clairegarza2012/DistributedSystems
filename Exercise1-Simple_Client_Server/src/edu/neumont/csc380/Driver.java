@@ -1,24 +1,27 @@
 package edu.neumont.csc380;
 
-public class Driver {
+public class Driver extends HallaStorObject {
 
-	private int id;
 	private String name;
 	private int age;
 	private boolean isMale;
 	
-	public Driver(int id, String name, int age, boolean isMale){
+	public Driver(String name, int age, boolean isMale){
 		
-		this.id = id;
+		super();
 		this.name = name;
 		this.age = age;
 		this.isMale = isMale;
 	}
 
-	public int getId() {
-		return id;
+	public Driver(int id, String name, int age, boolean isMale){
+		
+		super(id);
+		this.name = name;
+		this.age = age;
+		this.isMale = isMale;
 	}
-
+	
 	public String getName() {
 		return name;
 	}
