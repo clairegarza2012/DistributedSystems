@@ -69,6 +69,7 @@ public class Server {
 					if (obj != null){
 						
 						char objProposition = obj.toString().charAt(0);
+						System.out.println("Proposition: " + objProposition);
 						
 						if (objProposition == 'R'){
 							ps.println(protocol.protocolRacecar((RaceCar) obj));

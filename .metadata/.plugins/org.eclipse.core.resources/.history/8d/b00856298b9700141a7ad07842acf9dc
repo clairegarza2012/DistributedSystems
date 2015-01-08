@@ -58,12 +58,14 @@ public class Client {
 		timer = new Timer(1000, new MyTimer());
 		timer.start();
 		
-		ServerListener listener = new ServerListener();
-		listener.start();
+		ServerListener thread = new ServerListener();
+		thread.start();
 
-		Talker talker = new Talker();
-		talker.start();
+		Talker talk = new Talker();
+		talk.start();
 
+		System.out.println("Time: "  + count + " sec");
+		clientSocket.close();
 	}
 
 	private class Talker extends Thread {
@@ -111,19 +113,6 @@ public class Client {
 					e.printStackTrace();
 				}
 			}
-			
-			System.out.println("Time: "  + getTime() + ".... " + count);
-		}
-		
-		private String getTime() {
-									
-			int minutes = count / 60;
-			
-			int seconds = count - (minutes * 60);
-			
-			int hours = minutes / 60;
-			
-			return hours + ":" + minutes + ":" + seconds;
 		}
 	}
 

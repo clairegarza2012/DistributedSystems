@@ -116,10 +116,12 @@ public class Client {
 		}
 		
 		private String getTime() {
-									
-			int minutes = count / 60;
 			
-			int seconds = count - (minutes * 60);
+			int testCount = 266;
+						
+			int minutes = testCount / 60;
+			
+			int seconds = testCount - (minutes * 60);
 			
 			int hours = minutes / 60;
 			

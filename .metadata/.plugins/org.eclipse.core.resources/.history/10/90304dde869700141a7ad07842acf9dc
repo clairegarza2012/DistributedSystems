@@ -1,7 +1,5 @@
 package edu.neumont.csc380;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,7 +8,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
-import javax.swing.Timer;
+import java.util.Timer;
 
 public class Client {
 
@@ -26,10 +24,13 @@ public class Client {
 	private BufferedReader buffReader;
 	private PrintStream ps;
 
-	private Protocol protocol;
-	
 	private int count = 0;
-	private Timer timer;
+	private Timer timer = new Timer() {
+		public void run() throws InterruptedException{
+			count ++;
+			Thread.sleep(1000);
+		}
+	};
 	
 	public static void main(String[] args){
 
@@ -53,17 +54,16 @@ public class Client {
 		OutputStream os = clientSocket.getOutputStream();
 		ps = new PrintStream(os, true);
 
-		protocol = new Protocol();
 		
-		timer = new Timer(1000, new MyTimer());
-		timer.start();
 		
-		ServerListener listener = new ServerListener();
-		listener.start();
+		ServerListener thread = new ServerListener();
+		thread.start();
 
-		Talker talker = new Talker();
-		talker.start();
+		Talker talk = new Talker();
+		talk.start();
 
+		System.out.println("Time: "  + count + " sec");
+		//clientSocket.close();
 	}
 
 	private class Talker extends Thread {
@@ -79,7 +79,7 @@ public class Client {
 
 				ps.println("c" + obj);
 
-				System.out.println("Object Pushed to server: type:" + obj.charAt(0) + " id: " + Integer.parseInt(obj.substring(1, 17), 2) );
+				System.out.println("Object Pushed to server: type:" + obj.charAt(0) + " id:" + Integer.parseInt(obj.substring(1, 17), 2) );
 
 				ids.add(obj.substring(0, 17));
 
@@ -94,7 +94,7 @@ public class Client {
 
 			for (int i = 0; i < ids.size(); i++) {
 				ps.println("r" + ids.get(i));
-				
+
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
@@ -102,28 +102,6 @@ public class Client {
 				}
 			}
 
-			for (int i = 0; i < ids.size(); i++) {
-				ps.println("r" + ids.get(i));
-				
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-			
-			System.out.println("Time: "  + getTime() + ".... " + count);
-		}
-		
-		private String getTime() {
-									
-			int minutes = count / 60;
-			
-			int seconds = count - (minutes * 60);
-			
-			int hours = minutes / 60;
-			
-			return hours + ":" + minutes + ":" + seconds;
 		}
 	}
 
@@ -138,16 +116,9 @@ public class Client {
 						String line = buffReader.readLine();
 						System.out.println("Message from Server: \n" + line);
 
-						if (line.equals("Server Is Full!")) {
+						if (line.equals("Server Is Full!")){
 							serverFull = true;
 							break;
-						}
-						else if (line.charAt(0) == 'r') {
-							RaceCar racecar = protocol.deprotocolRacecar(line);
-							updateRacecar(racecar);
-						}else if (line.charAt(0) == 'd') {
-							Driver driver = protocol.deprotocolDriver(line);
-							updateDriver(driver);
 						}
 
 					}
@@ -156,34 +127,7 @@ public class Client {
 				} 
 			}
 		}
-
-		private void updateRacecar(RaceCar racecar) {
-
-			int horsepower = racecar.getHorsePower();
-			racecar.setHorsePower(horsepower + 1003);
-			
-			String racecarProtocol = protocol.protocolRacecar(racecar);
-			ps.println("u" + racecarProtocol);
-		}
-
-		private void updateDriver(Driver driver) {
-
-			int age = driver.getAge();
-			driver.setAge(age + 100);
-			
-			String driverProtocol = protocol.protocolDriver(driver);
-			ps.println("u" + driverProtocol);
-		}
-		
 	}
 
-	private class MyTimer implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			count ++;
-		}
-		
-	}
 }
 
