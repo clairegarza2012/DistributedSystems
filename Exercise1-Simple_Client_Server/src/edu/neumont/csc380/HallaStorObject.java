@@ -16,9 +16,10 @@ public abstract class HallaStorObject {
 	
 	public HallaStorObject(int id){
 		HallaStorObject.id = id;
+		System.out.println("id" + id);
 	}
 	
-	public int getId(){
+	protected int getId(){
 		return id;
 	}
 	

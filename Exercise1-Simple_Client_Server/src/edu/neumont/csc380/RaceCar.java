@@ -6,10 +6,12 @@ public class RaceCar extends HallaStorObject{
 	private String model;
 	private int horsePower;
 	private double quarterMileTime;
+	private int id;
 	
 	public RaceCar(String make, String model, int horsePower, double quarterMileTime){
 		
 		super();
+		this.id = super.getId();
 		this.make = make;
 		this.model = model;
 		this.horsePower = horsePower;
@@ -19,6 +21,7 @@ public class RaceCar extends HallaStorObject{
 	public RaceCar(int id, String make, String model, int horsePower, double quarterMileTime){
 		
 		super(id);
+		this.id = id;
 		this.make = make;
 		this.model = model;
 		this.horsePower = horsePower;
@@ -43,6 +46,10 @@ public class RaceCar extends HallaStorObject{
 		return quarterMileTime;
 	}
 
+	public int getId(){
+		return id;
+	}
+	
 	/* Setters */
 	
 	public void setMake(String make) {
@@ -63,7 +70,7 @@ public class RaceCar extends HallaStorObject{
 
 	@Override
 	public String toString() {
-		return "RaceCar [make=" + make + ", model=" + model + ", horsePower="
+		return "RaceCar [id= " + id + ", make=" + make + ", model=" + model + ", horsePower="
 				+ horsePower + ", quarterMileTime=" + quarterMileTime + "]";
 	}
 	

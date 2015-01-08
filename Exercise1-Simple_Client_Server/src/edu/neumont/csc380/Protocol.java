@@ -52,7 +52,7 @@ public class Protocol {
 		int placeInRacecarProtocol = 1;
 		
 		int id = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength), 2); // first 16 characters .. does not include the character at index 16
-				
+		System.out.println("deprotocol id: " + id);
 		placeInRacecarProtocol += binaryStringLength;
 		
 		int makeLength = Integer.parseInt(racecarProtocol.substring(placeInRacecarProtocol, placeInRacecarProtocol + binaryStringLength), 2);
@@ -105,7 +105,7 @@ public class Protocol {
 		int placeInDriverProtocol = 1;
 		
 		int id = Integer.parseInt(driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + binaryStringLength), 2);
-				
+		System.out.println("deprotocol id: " + id);
 		placeInDriverProtocol += binaryStringLength;
 				
 		int nameLength = Integer.parseInt(driverProtocol.substring(placeInDriverProtocol, placeInDriverProtocol + binaryStringLength), 2);

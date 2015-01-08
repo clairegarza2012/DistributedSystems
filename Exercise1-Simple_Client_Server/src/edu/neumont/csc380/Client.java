@@ -8,6 +8,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 import java.util.ArrayList;
+import java.util.Timer;
 
 public class Client {
 
@@ -23,6 +24,14 @@ public class Client {
 	private BufferedReader buffReader;
 	private PrintStream ps;
 
+	private int count = 0;
+	private Timer timer = new Timer() {
+		public void run() throws InterruptedException{
+			count ++;
+			Thread.sleep(1000);
+		}
+	};
+	
 	public static void main(String[] args){
 
 		try {
@@ -45,50 +54,15 @@ public class Client {
 		OutputStream os = clientSocket.getOutputStream();
 		ps = new PrintStream(os, true);
 
+		
+		
 		ServerListener thread = new ServerListener();
 		thread.start();
-		
+
 		Talker talk = new Talker();
 		talk.start();
 
-
-//		while(buffReader.readLine() != null){
-//
-//			String line = buffReader.readLine();
-//			System.out.println("Message from Server: \n" + line);
-//
-//			if (line.equals("Server Is Full!")){
-//				serverFull = true;
-//			}
-//			if (line.equals("sucessful!")){
-//				ids.add("some string");
-//			}
-//		}
-
-		//		while(!serverFull){
-		//			
-		//			// send objects to server
-		//			String obj = ObjectGenerator.generate();
-		//
-		//			System.out.println("Object Created!");
-		//
-		//			ps.println("c" + obj);
-		//
-		//			System.out.println("Object Pushed to server: type:" + obj.charAt(0) + " id:" + Integer.parseInt(obj.substring(1, 17), 2) );
-		//			
-		//			try {
-		//				Thread.sleep(1000);
-		//			} catch (InterruptedException e) {
-		//				e.printStackTrace();
-		//			}
-		//		}
-		//		
-		//		System.out.println("Number Of Id's: " + ids.size());
-
-		//while (true){
-		// update objects
-		//}
-
+		System.out.println("Time: "  + count + " sec");
 		//clientSocket.close();
 	}
 
@@ -118,17 +92,16 @@ public class Client {
 
 			System.out.println("Number Of Id's: " + ids.size());
 
-			for (int i = 0; i < ids.size(); i++){
-				String id = ids.get(i);
-				ps.println("r" + id);
-				
+			for (int i = 0; i < ids.size(); i++) {
+				ps.println("r" + ids.get(i));
+
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 		}
 	}
 
@@ -136,20 +109,23 @@ public class Client {
 
 		public void run () {
 
-			try {
-				while(buffReader.readLine() != null){
+			while (true){
+				try {
+					while(buffReader.ready()){
 
-					String line = buffReader.readLine();
-					System.out.println("Message from Server: \n" + line);
+						String line = buffReader.readLine();
+						System.out.println("Message from Server: \n" + line);
 
-					if (line.equals("Server Is Full!")){
-						serverFull = true;
+						if (line.equals("Server Is Full!")){
+							serverFull = true;
+							break;
+						}
+
 					}
-					
-				}
-			} catch (IOException e) {
-				e.printStackTrace();
-			} 
+				} catch (IOException e) {
+					e.printStackTrace();
+				} 
+			}
 		}
 	}
 

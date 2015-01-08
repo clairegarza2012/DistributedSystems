@@ -5,10 +5,12 @@ public class Driver extends HallaStorObject {
 	private String name;
 	private int age;
 	private boolean isMale;
+	private int id;
 	
 	public Driver(String name, int age, boolean isMale){
 		
 		super();
+		this.id = super.getId();
 		this.name = name;
 		this.age = age;
 		this.isMale = isMale;
@@ -17,6 +19,7 @@ public class Driver extends HallaStorObject {
 	public Driver(int id, String name, int age, boolean isMale){
 		
 		super(id);
+		this.id = id;
 		this.name = name;
 		this.age = age;
 		this.isMale = isMale;
@@ -36,6 +39,10 @@ public class Driver extends HallaStorObject {
 		return isMale;
 	}
 
+	public int getId(){
+		return id;
+	}
+	
 	/* Setters */
 	
 	public void setName(String name) {
@@ -52,7 +59,7 @@ public class Driver extends HallaStorObject {
 
 	@Override
 	public String toString() {
-		return "Driver [name=" + name + ", age=" + age + ", isMale=" + isMale
+		return "Driver [id= " + id + ", name=" + name + ", age=" + age + ", isMale=" + isMale
 				+ "]";
 	}
 

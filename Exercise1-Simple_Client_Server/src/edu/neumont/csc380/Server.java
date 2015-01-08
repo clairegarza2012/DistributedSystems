@@ -16,7 +16,7 @@ public class Server {
 	 *  
 	 */
 	private static HallaStor store;
-
+	
 	public static void main(String[] args){
 
 		try {
@@ -68,16 +68,17 @@ public class Server {
 
 					if (obj != null){
 						
-						char objProposition = object.charAt(0);
+						char objProposition = obj.toString().charAt(0);
 						System.out.println("Proposition: " + objProposition);
 						
-						if (objProposition == 'r'){
-						ps.println("From Server: RaceCar " + protocol.protocolRacecar((RaceCar) obj));
+						if (objProposition == 'R'){
+							ps.println(protocol.protocolRacecar((RaceCar) obj));
 						}
 						else {
-							ps.println("From Server: Driver " + protocol.protocolDriver((Driver) obj));
+							ps.println(protocol.protocolDriver((Driver) obj));
 						}
 						System.out.println("Sent message to Client");
+						
 					}
 					
 				} catch (IllegalStateException e){
