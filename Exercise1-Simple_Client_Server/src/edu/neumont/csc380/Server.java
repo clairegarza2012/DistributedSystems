@@ -67,12 +67,18 @@ public class Server {
 					Object obj = doOperation(operation, object, protocol);
 
 					if (obj != null){
-						ps.println("From Server: " + obj.toString());
+						
+						char objProposition = object.charAt(0);
+						System.out.println("Proposition: " + objProposition);
+						
+						if (objProposition == 'r'){
+						ps.println("From Server: RaceCar " + protocol.protocolRacecar((RaceCar) obj));
+						}
+						else {
+							ps.println("From Server: Driver " + protocol.protocolDriver((Driver) obj));
+						}
 						System.out.println("Sent message to Client");
 					}
-				
-					ps.println("sucessful!");
-					System.out.println("sucessful!");
 					
 				} catch (IllegalStateException e){
 					ps.println("Server Is Full!");
@@ -82,11 +88,6 @@ public class Server {
 
 			}
 
-			// How do you know when the server is full?
-				// the server will throw an error
-			
-			// If server is full,
-				// tell client to stop making objects
 		}
 
 		//ss.close();

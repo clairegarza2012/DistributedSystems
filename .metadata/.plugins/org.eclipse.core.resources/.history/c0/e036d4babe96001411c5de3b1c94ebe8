@@ -1,0 +1,179 @@
+package edu.neumont.csc380;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Random;
+
+public class RacecarFactory {
+
+	private static Random ran = new Random();
+	private static HashMap<Integer, Make> makes;	
+
+	public static RaceCar makeCar(){
+
+		initializeMakes();
+
+		String make = "";
+		String model = "";
+		int horsepower = 0;
+		double quarterMileTime = 0.0;
+
+		make = getMake();
+
+		model = getModel();
+
+		horsepower = ran.nextInt(1800);
+
+		quarterMileTime = ran.nextInt(3000) + ran.nextDouble();
+
+		return new RaceCar(make, model, horsepower, quarterMileTime);
+	}
+
+	private static String getMake() {
+
+		return "";
+	}
+
+	private static String getModel() {
+
+		return "";
+	}
+
+	private static void initializeMakes() {
+
+		makes = new HashMap<Integer, Make>();
+
+		Make ford = new Make("ford");
+
+		ford.addModel("Focus");
+		ford.addModel("F-150");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+
+		makes.put(0, ford);
+
+		Make gmc = new Make("gmc");
+
+		ford.addModel("Focus");
+		ford.addModel("F-150");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+
+		makes.put(0, ford);
+
+		Make ford = new Make("ford");
+
+		ford.addModel("Focus");
+		ford.addModel("F-150");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+
+		makes.put(0, ford);
+
+		Make ford = new Make("ford");
+
+		ford.addModel("Focus");
+		ford.addModel("F-150");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+
+		makes.put(0, ford);
+
+		Make ford = new Make("ford");
+
+		ford.addModel("Focus");
+		ford.addModel("F-150");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+
+		makes.put(0, ford);
+
+		Make ford = new Make("ford");
+
+		ford.addModel("Focus");
+		ford.addModel("F-150");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+
+		makes.put(0, ford);
+
+		Make ford = new Make("ford");
+
+		ford.addModel("Focus");
+		ford.addModel("F-150");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+
+		makes.put(0, ford);
+
+		Make ford = new Make("ford");
+
+		ford.addModel("Focus");
+		ford.addModel("F-150");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+
+		makes.put(0, ford);
+
+		Make ford = new Make("ford");
+
+		ford.addModel("Focus");
+		ford.addModel("F-150");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+
+		makes.put(0, ford);
+
+		Make ford = new Make("ford");
+
+		ford.addModel("Focus");
+		ford.addModel("F-150");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+
+		makes.put(0, ford);
+
+		Make ford = new Make("ford");
+
+		ford.addModel("Focus");
+		ford.addModel("F-150");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+		ford.addModel("Focus");
+
+		makes.put(0, ford);
+	}
+
+	private static class Make {
+
+		private String name;
+
+		private ArrayList<String> models = new ArrayList<String>();
+
+		public Make (String name){
+			this.name = name;
+		}
+
+		public void addModel(String model){
+			models.add(model);
+		}
+
+		public void removeModel(String model){
+			models.remove(model);
+		}
+
+		public void getModel(int index){
+			models.get(index);
+		}
+	}
+}

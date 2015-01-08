@@ -1,0 +1,187 @@
+package edu.neumont.csc380;
+
+import java.util.HashMap;
+import java.util.Random;
+
+public class DriverFactory {
+
+	private static Random ran = new Random();
+	
+	private static HashMap<Integer, String> maleNames;
+	private static HashMap<Integer, String> femaleNames;
+	private static HashMap<Integer, String> lastNames;
+	
+	public static Driver makeDriver(){
+		
+		instanciateNames();
+		
+		boolean isMale = false;
+		String name = "";
+		int age = 0;
+		
+		int isMaleProp = ran.nextInt(2);
+		
+		if (isMaleProp == 0){
+			isMale = true;
+			name = getMaleFirstName();
+		}
+		else{
+			name = getFemaleFirstName();
+		}
+		
+		name += " " + getLastName();
+		
+		age = ran.nextInt(120);
+		
+		return new Driver(name, age, isMale);
+	}
+	
+	private static String getMaleFirstName(){
+		
+		int key = ran.nextInt(30);
+		
+		return maleNames.get(key);
+	}
+	
+	private static String getFemaleFirstName(){
+		
+		int key = ran.nextInt(30);
+
+		return femaleNames.get(key);
+	}
+	
+	private static String getLastName(){
+		
+		int key = ran.nextInt(30);
+
+		return lastNames.get(key);
+	}
+	
+	private static void instanciateNames() {
+
+		maleNames = new HashMap<Integer, String>();
+		femaleNames = new HashMap<Integer, String>();
+		lastNames = new HashMap<Integer, String>();
+		
+		instanciateMaleNames();
+		instanciateFemaleNames();
+		instanciateLastNames();
+	}
+
+	private static void instanciateMaleNames() {
+		maleNames.put(0, "");
+		maleNames.put(1, "");
+		maleNames.put(2, "");
+		maleNames.put(3, "");
+		maleNames.put(4, "");
+		
+		maleNames.put(5, "");
+		maleNames.put(6, "");
+		maleNames.put(7, "");
+		maleNames.put(8, "");
+		maleNames.put(9, "");
+		
+		maleNames.put(10, "");
+		maleNames.put(11, "");
+		maleNames.put(12, "");
+		maleNames.put(13, "");
+		maleNames.put(14, "");
+		
+		maleNames.put(15, "");
+		maleNames.put(16, "");
+		maleNames.put(17, "");
+		maleNames.put(18, "");
+		maleNames.put(19, "");
+		
+		maleNames.put(20, "");
+		maleNames.put(21, "");
+		maleNames.put(22, "");
+		maleNames.put(23, "");
+		maleNames.put(24, "");
+		
+		maleNames.put(25, "");
+		maleNames.put(26, "");
+		maleNames.put(27, "");
+		maleNames.put(28, "");
+		maleNames.put(29, "");
+	}
+
+	private static void instanciateFemaleNames() {
+		femaleNames.put(0, "");
+		femaleNames.put(1, "");
+		femaleNames.put(2, "");
+		femaleNames.put(3, "");
+		femaleNames.put(4, "");
+		
+		femaleNames.put(5, "");
+		femaleNames.put(6, "");
+		femaleNames.put(7, "");
+		femaleNames.put(8, "");
+		femaleNames.put(9, "");
+		
+		femaleNames.put(10, "");
+		femaleNames.put(11, "");
+		femaleNames.put(12, "");
+		femaleNames.put(13, "");
+		femaleNames.put(14, "");
+		
+		femaleNames.put(15, "");
+		femaleNames.put(16, "");
+		femaleNames.put(17, "");
+		femaleNames.put(18, "");
+		femaleNames.put(19, "");
+		
+		femaleNames.put(20, "");
+		femaleNames.put(21, "");
+		femaleNames.put(22, "");
+		femaleNames.put(23, "");
+		femaleNames.put(24, "");
+		
+		femaleNames.put(25, "");
+		femaleNames.put(26, "");
+		femaleNames.put(27, "");
+		femaleNames.put(28, "");
+		femaleNames.put(29, "");
+	}
+
+	private static void instanciateLastNames() {
+		lastNames.put(0, "");
+		lastNames.put(1, "");
+		lastNames.put(2, "");
+		lastNames.put(3, "");
+		lastNames.put(4, "");
+		
+		lastNames.put(5, "");
+		lastNames.put(6, "");
+		lastNames.put(7, "");
+		lastNames.put(8, "");
+		lastNames.put(9, "");
+		
+		lastNames.put(10, "");
+		lastNames.put(11, "");
+		lastNames.put(12, "");
+		lastNames.put(13, "");
+		lastNames.put(14, "");
+		
+		lastNames.put(15, "");
+		lastNames.put(16, "");
+		lastNames.put(17, "");
+		lastNames.put(18, "");
+		lastNames.put(19, "");
+		
+		lastNames.put(20, "");
+		lastNames.put(21, "");
+		lastNames.put(22, "");
+		lastNames.put(23, "");
+		lastNames.put(24, "");
+		
+		lastNames.put(25, "");
+		lastNames.put(26, "");
+		lastNames.put(27, "");
+		lastNames.put(28, "");
+		lastNames.put(29, "");
+	}
+	
+	
+
+}
