@@ -113,10 +113,19 @@ public class Client {
 				}
 			}
 			
-			timer.stop();
-			System.out.println("Time: "  + myTimer.getTime());
+			System.out.println("Time: "  + getTime() + ".... " + myTimer.getCount());
 		}
 		
+		private String getTime() {
+									
+			int minutes = myTimer.getCount() / 60;
+			
+			int seconds = myTimer.getCount() - (minutes * 60);
+			
+			int hours = minutes / 60;
+			
+			return hours + ":" + minutes + ":" + seconds;
+		}
 	}
 
 	private class ServerListener extends Thread {

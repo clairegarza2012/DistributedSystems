@@ -113,7 +113,6 @@ public class Client {
 				}
 			}
 			
-			timer.stop();
 			System.out.println("Time: "  + myTimer.getTime());
 		}
 		

@@ -28,8 +28,8 @@ public class Client {
 
 	private Protocol protocol;
 	
+	private int count = 0;
 	private Timer timer;
-	private MyTimer myTimer;
 	
 	public static void main(String[] args){
 
@@ -55,8 +55,7 @@ public class Client {
 
 		protocol = new Protocol();
 		
-		myTimer = new MyTimer();
-		timer = new Timer(1000, myTimer);
+		timer = new Timer(1000, new MyTimer());
 		timer.start();
 		
 		ServerListener listener = new ServerListener();
@@ -113,10 +112,19 @@ public class Client {
 				}
 			}
 			
-			timer.stop();
-			System.out.println("Time: "  + myTimer.getTime());
+			System.out.println("Time: "  + getTime() + ".... " + count);
 		}
 		
+		private String getTime() {
+									
+			int minutes = count / 60;
+			
+			int seconds = count - (minutes * 60);
+			
+			int hours = minutes / 60;
+			
+			return hours + ":" + minutes + ":" + seconds;
+		}
 	}
 
 	private class ServerListener extends Thread {
@@ -169,5 +177,13 @@ public class Client {
 		
 	}
 
+	private class MyTimer implements ActionListener {
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			count ++;
+		}
+		
+	}
 }
 
