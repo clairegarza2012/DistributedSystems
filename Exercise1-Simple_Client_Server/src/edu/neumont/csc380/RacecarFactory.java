@@ -135,10 +135,6 @@ public class RacecarFactory {
 			models.add(model);
 		}
 
-		public void removeModel(String model){
-			models.remove(model);
-		}
-
 		public String getModel(int index){
 			return models.get(index);
 		}

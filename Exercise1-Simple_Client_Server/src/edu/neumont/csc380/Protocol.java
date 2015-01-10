@@ -9,21 +9,6 @@ public class Protocol {
 		
 	}
 
-	public HallaStorObject deprotocolObject(String object){
-		
-		HallaStorObject obj = null;
-		
-		char objectProposition = object.charAt(0);
-		
-		if (objectProposition == 'r'){
-			obj = deprotocolRacecar(object);
-		}else{
-			obj = deprotocolDriver(object);
-		}
-		
-		return obj;
-	}
-	
 	public String protocolRacecar(RaceCar car){
 		
 		int id = car.getId();

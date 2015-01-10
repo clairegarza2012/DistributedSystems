@@ -1,6 +1,6 @@
 package edu.neumont.csc380;
 
-public class RaceCar extends HallaStorObject{
+public class RaceCar {
 
 	private String make;
 	private String model;
@@ -10,8 +10,6 @@ public class RaceCar extends HallaStorObject{
 	
 	public RaceCar(String make, String model, int horsePower, double quarterMileTime){
 		
-		super();
-		this.id = super.getId();
 		this.make = make;
 		this.model = model;
 		this.horsePower = horsePower;
@@ -20,7 +18,6 @@ public class RaceCar extends HallaStorObject{
 	
 	public RaceCar(int id, String make, String model, int horsePower, double quarterMileTime){
 		
-		super(id);
 		this.id = id;
 		this.make = make;
 		this.model = model;

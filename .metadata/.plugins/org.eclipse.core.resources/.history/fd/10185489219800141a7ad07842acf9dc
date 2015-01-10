@@ -1,0 +1,119 @@
+package edu.neumont.csc380;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+import com.hallaLib.HallaStor;
+
+public class Server {
+
+	private static HallaStor store;
+
+	private ServerSocket serverSocket;
+
+	private Protocol protocol;
+
+	public static void main(String[] args){
+
+		try {
+			new Server();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Server() throws IOException{
+
+		serverSocket = new ServerSocket(2222); // 2222 is the port
+
+		System.out.println("server created");
+
+		store = HallaStor.getInstance();
+
+		protocol = new Protocol();
+
+		ClientListener listener = new ClientListener();
+
+		listener.start();
+
+		//ss.close();
+		//serverSocket.close();
+	}
+
+	private class ClientListener extends Thread{
+
+		public void run(){
+
+			while (true){
+				try {
+					Socket clientSocket = serverSocket.accept();
+
+					System.out.println("client accepted!");
+
+					ClientCommunicator thread = new ClientCommunicator(clientSocket);
+
+					thread.start();
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+
+	
+
+	private Object doOperation(char operation, String object, Protocol protocol) {
+
+		Object o = null;
+
+		if (operation == 'c' || operation == 'u'){
+			HallaStorObject obj = protocol.deprotocolObject(object);
+
+			if (operation == 'c') {
+				create(obj); 
+			}
+			else { 
+				update(obj); 
+			}
+		}
+		else if (operation == 'r' || operation == 'd'){
+			int id = Integer.parseInt(object.substring(1), 2);
+
+			if (operation == 'r') {
+				o = read(id);
+			}
+			else {
+				delete(id);
+			}
+		}
+
+		return o;
+	}
+
+	private void create(HallaStorObject obj){
+
+		store.add("" + obj.getId(), obj);
+	}
+
+	private Object read(int id){
+
+		return store.get("" + id);
+	}
+
+	private void update(HallaStorObject obj){
+
+		store.update("" + obj.getId(), obj);
+	}
+
+	private void delete(int id){
+
+		store.delete("" + id);
+	}
+
+}

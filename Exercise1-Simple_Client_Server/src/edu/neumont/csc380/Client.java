@@ -1,7 +1,5 @@
 package edu.neumont.csc380;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -13,12 +11,6 @@ import java.util.ArrayList;
 import javax.swing.Timer;
 
 public class Client {
-
-	/* The client will use the server to store and retrieve instances of the following simple POJOs 
-	 * (associated with keys of type String):
-	 * 
-	 */
-	//private static Scanner scan = new Scanner(System.in);
 
 	private ArrayList<String> ids = new ArrayList<String>();
 	private boolean serverFull = false;
@@ -41,6 +33,7 @@ public class Client {
 		}
 	}
 
+	@SuppressWarnings("resource")
 	public Client() throws IOException{
 
 		Socket clientSocket = new Socket("localhost", 2222);
@@ -58,9 +51,6 @@ public class Client {
 		myTimer = new MyTimer();
 		timer = new Timer(1000, myTimer);
 		timer.start();
-		
-		ServerListener listener = new ServerListener();
-		listener.start();
 
 		Talker talker = new Talker();
 		talker.start();
@@ -71,18 +61,19 @@ public class Client {
 
 		public void run(){
 
+			IdListener idListener = new IdListener();
+			idListener.start();
+			
 			while(!serverFull){
 
 				// send objects to server
 				String obj = ObjectGenerator.generate();
 
-				System.out.println("Object Created!");
+				System.out.println("Object Created!" + " \n" + obj);
 
 				ps.println("c" + obj);
 
 				System.out.println("Object Pushed to server: type:" + obj.charAt(0) + " id: " + Integer.parseInt(obj.substring(1, 17), 2) );
-
-				ids.add(obj.substring(0, 17));
 
 				try {
 					Thread.sleep(5000);
@@ -91,8 +82,13 @@ public class Client {
 				}
 			}
 
+			idListener.stop();
+			
 			System.out.println("Number Of Id's: " + ids.size());
 
+			ServerListener listener = new ServerListener();
+			listener.start();
+			
 			for (int i = 0; i < ids.size(); i++) {
 				ps.println("r" + ids.get(i));
 				
@@ -119,6 +115,24 @@ public class Client {
 		
 	}
 
+	private class IdListener extends Thread{
+		
+		public void run (){
+			
+			while (true){
+				try {
+					while (buffReader.ready()){
+						String line = buffReader.readLine();
+						ids.add(line);
+					}
+					
+				} catch (IOException e){
+					e.printStackTrace();
+				}
+			}
+		}
+	}
+	
 	private class ServerListener extends Thread {
 
 		public void run () {

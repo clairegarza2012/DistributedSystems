@@ -1,6 +1,6 @@
 package edu.neumont.csc380;
 
-public class Driver extends HallaStorObject {
+public class Driver {
 
 	private String name;
 	private int age;
@@ -9,8 +9,6 @@ public class Driver extends HallaStorObject {
 	
 	public Driver(String name, int age, boolean isMale){
 		
-		super();
-		this.id = super.getId();
 		this.name = name;
 		this.age = age;
 		this.isMale = isMale;
@@ -18,7 +16,6 @@ public class Driver extends HallaStorObject {
 
 	public Driver(int id, String name, int age, boolean isMale){
 		
-		super(id);
 		this.id = id;
 		this.name = name;
 		this.age = age;
