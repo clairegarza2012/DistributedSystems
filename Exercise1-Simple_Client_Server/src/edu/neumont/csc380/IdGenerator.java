@@ -7,7 +7,7 @@ public class IdGenerator {
 	private static IdGenerator idGenerator;
 	
 	private IdGenerator(){
-		this.id = 0;
+		IdGenerator.id = 0;
 	}
 	
 	public static IdGenerator getInstance(){
@@ -23,8 +23,12 @@ public class IdGenerator {
 		return idGenerator;
 	}
 	
+	public void incrementId(){
+		++id;
+	}
+	
 	public int getId(){
-		return ++id;
+		return id;
 	}
 
 }

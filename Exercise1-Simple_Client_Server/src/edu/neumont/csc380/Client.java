@@ -7,22 +7,22 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.ArrayList;
 import javax.swing.Timer;
 
 public class Client {
 
-	private ArrayList<String> ids = new ArrayList<String>();
 	private boolean serverFull = false;
 
 	private BufferedReader buffReader;
 	private PrintStream ps;
 
 	private Protocol protocol;
-	
+
 	private Timer timer;
 	private MyTimer myTimer;
-	
+
+	private int lastId = -1;
+
 	public static void main(String[] args){
 
 		try {
@@ -47,7 +47,7 @@ public class Client {
 		ps = new PrintStream(os, true);
 
 		protocol = new Protocol();
-		
+
 		myTimer = new MyTimer();
 		timer = new Timer(1000, myTimer);
 		timer.start();
@@ -61,9 +61,9 @@ public class Client {
 
 		public void run(){
 
-			IdListener idListener = new IdListener();
-			idListener.start();
-			
+			ServerListener listener = new ServerListener();
+			listener.start();
+
 			while(!serverFull){
 
 				// send objects to server
@@ -82,16 +82,26 @@ public class Client {
 				}
 			}
 
-			idListener.stop();
-			
-			System.out.println("Number Of Id's: " + ids.size());
+			ps.println("ic" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
 
-			ServerListener listener = new ServerListener();
-			listener.start();
-			
-			for (int i = 0; i < ids.size(); i++) {
-				ps.println("r" + ids.get(i));
-				
+			try {
+				while (lastId == -1){
+					while (buffReader.ready()){
+						String line = buffReader.readLine();
+						lastId = Integer.parseInt(line);
+						System.out.println("Last Id: " + line);
+						break;
+					}
+				}
+			} catch (NumberFormatException | IOException e1) {
+				e1.printStackTrace();
+			}
+
+			System.out.println("Number Of Id's: " + lastId);
+
+			for (int index = 1; index <= lastId; index++) {
+				ps.println("r" + index);
+
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
@@ -99,40 +109,22 @@ public class Client {
 				}
 			}
 
-			for (int i = 0; i < ids.size(); i++) {
-				ps.println("r" + ids.get(i));
-				
+			for (int index = 1; index <= lastId; index++) {
+				ps.println("r" + index);
+
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
 					e.printStackTrace();
 				}
 			}
-			
+
 			timer.stop();
 			System.out.println("Time: "  + myTimer.getTime());
 		}
-		
+
 	}
 
-	private class IdListener extends Thread{
-		
-		public void run (){
-			
-			while (true){
-				try {
-					while (buffReader.ready()){
-						String line = buffReader.readLine();
-						ids.add(line);
-					}
-					
-				} catch (IOException e){
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-	
 	private class ServerListener extends Thread {
 
 		public void run () {
@@ -147,13 +139,14 @@ public class Client {
 						if (line.equals("Server Is Full!")) {
 							serverFull = true;
 							break;
-						}
-						else if (line.charAt(0) == 'r') {
+						}else if (line.charAt(0) == 'r') {
 							RaceCar racecar = protocol.deprotocolRacecar(line);
 							updateRacecar(racecar);
 						}else if (line.charAt(0) == 'd') {
 							Driver driver = protocol.deprotocolDriver(line);
 							updateDriver(driver);
+						}else{
+
 						}
 
 					}
@@ -167,7 +160,7 @@ public class Client {
 
 			int horsepower = racecar.getHorsePower();
 			racecar.setHorsePower(horsepower + 1003);
-			
+
 			String racecarProtocol = protocol.protocolRacecar(racecar);
 			ps.println("u" + racecarProtocol);
 		}
@@ -176,11 +169,11 @@ public class Client {
 
 			int age = driver.getAge();
 			driver.setAge(age + 100);
-			
+
 			String driverProtocol = protocol.protocolDriver(driver);
 			ps.println("u" + driverProtocol);
 		}
-		
+
 	}
 
 }

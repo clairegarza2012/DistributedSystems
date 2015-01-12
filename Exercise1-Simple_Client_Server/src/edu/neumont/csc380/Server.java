@@ -3,12 +3,11 @@ package edu.neumont.csc380;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import com.hallaLib.HallaStor;
 
 public class Server {
 
-	private static HallaStor store;
-	
+	private static Store store;
+		
 	private ServerSocket serverSocket;
 	
 	private Server server;
@@ -30,7 +29,7 @@ public class Server {
 
 		System.out.println("Server Created");
 
-		store = HallaStor.getInstance();
+		store = Store.getInstance();
 
 		idGenerator = IdGenerator.getInstance();
 		
@@ -67,25 +66,32 @@ public class Server {
 	
 	public int create(Object obj){
 
+		idGenerator.incrementId();
+		
 		int id = idGenerator.getId();
 				
-		store.add("" + id, obj);
+		store.addObject("" + id, obj);
 		
 		return id;
 	}
 
 	public Object read(int id){
 
-		return store.get("" + id);
+		return store.getObject("" + id);
 	}
 
 	public void update(String id, Object obj){
 
-		store.update(id, obj);
+		store.updateObject(id, obj);
 	}
 
 	public void delete(int id){
 
-		store.delete("" + id);
+		store.deleteObject("" + id);
 	}
+	
+	public int getLastId(){
+		return idGenerator.getId();
+	}
+	
 }
