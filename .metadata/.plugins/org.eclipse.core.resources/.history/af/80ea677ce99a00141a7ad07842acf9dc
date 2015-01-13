@@ -24,7 +24,7 @@ public class Client {
 	private MyTimer myTimer;
 
 	private ArrayList<String> ids;
-
+	
 	public static void main(String[] args){
 
 		try {
@@ -86,29 +86,8 @@ public class Client {
 			}
 
 			// Communicate to server to get all the ids
-
-			boolean allIds = false;
 			
-			IdListener idListener = new IdListener();
-			idListener.start();
-			
-			while (!allIds){
-				try {
-					ps.println("gg" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
 
-					while (buffReader.ready()){
-						String line = buffReader.readLine();
-						ids.add(line);
-					}
-					
-				} catch (IndexOutOfBoundsException | IOException e) {
-					e.printStackTrace();
-					allIds = true;
-				}
-			}
-
-			Thread.yield();
-			
 			System.out.println("Number Of Id's: " + ids.size());
 
 			for (int index = 1; index <= ids.size(); index++) {
@@ -137,27 +116,6 @@ public class Client {
 
 	}
 
-	private class IdListener extends Thread {
-		
-		public void run () {
-					
-			boolean stop = false;
-			while (!stop) {
-				try {
-					while (buffReader.ready()){
-						String line = buffReader.readLine();
-						ids.add(line);
-					}				
-				} catch (IOException e) {
-					e.printStackTrace();
-					stop = true;
-				}
-			}
-			
-		}
-		
-	}
-	
 	private class ServerListener extends Thread {
 
 		public void run () {

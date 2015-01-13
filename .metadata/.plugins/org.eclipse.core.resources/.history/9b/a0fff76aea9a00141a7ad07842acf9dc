@@ -31,7 +31,6 @@ public class Store {
 	}
 
 	public String getId(int index){
-
 		return ids.get(index);
 	}
 	

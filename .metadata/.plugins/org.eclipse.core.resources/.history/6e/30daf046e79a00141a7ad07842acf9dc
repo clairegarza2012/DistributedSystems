@@ -7,8 +7,6 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
-import java.util.ArrayList;
-
 import javax.swing.Timer;
 
 public class Client {
@@ -23,7 +21,7 @@ public class Client {
 	private Timer timer;
 	private MyTimer myTimer;
 
-	private ArrayList<String> ids;
+	private int lastId = -1;
 
 	public static void main(String[] args){
 
@@ -48,7 +46,6 @@ public class Client {
 		OutputStream os = clientSocket.getOutputStream();
 		ps = new PrintStream(os, true);
 
-		ids = new ArrayList<String>();
 		protocol = new Protocol();
 
 		myTimer = new MyTimer();
@@ -85,34 +82,25 @@ public class Client {
 				}
 			}
 
-			// Communicate to server to get all the ids
+			ps.println("ic" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
 
-			boolean allIds = false;
-			
-			IdListener idListener = new IdListener();
-			idListener.start();
-			
-			while (!allIds){
-				try {
-					ps.println("gg" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
-
+			try {
+				while (lastId == -1){
 					while (buffReader.ready()){
 						String line = buffReader.readLine();
-						ids.add(line);
+						lastId = Integer.parseInt(line);
+						System.out.println("Last Id: " + line);
+						break;
 					}
-					
-				} catch (IndexOutOfBoundsException | IOException e) {
-					e.printStackTrace();
-					allIds = true;
 				}
+			} catch (NumberFormatException | IOException e1) {
+				e1.printStackTrace();
 			}
 
-			Thread.yield();
-			
-			System.out.println("Number Of Id's: " + ids.size());
+			System.out.println("Number Of Id's: " + lastId);
 
-			for (int index = 1; index <= ids.size(); index++) {
-				ps.println("r" + String.format("%16s", Integer.toBinaryString(index)).replace(" ", "0"));
+			for (int index = 1; index <= lastId; index++) {
+				ps.println("r" + index);
 
 				try {
 					Thread.sleep(5000);
@@ -121,8 +109,8 @@ public class Client {
 				}
 			}
 
-			for (int index = 1; index <= ids.size(); index++) {
-				ps.println("r" + String.format("%16s", Integer.toBinaryString(index)).replace(" ", "0"));
+			for (int index = 1; index <= lastId; index++) {
+				ps.println("r" + index);
 
 				try {
 					Thread.sleep(5000);
@@ -137,27 +125,6 @@ public class Client {
 
 	}
 
-	private class IdListener extends Thread {
-		
-		public void run () {
-					
-			boolean stop = false;
-			while (!stop) {
-				try {
-					while (buffReader.ready()){
-						String line = buffReader.readLine();
-						ids.add(line);
-					}				
-				} catch (IOException e) {
-					e.printStackTrace();
-					stop = true;
-				}
-			}
-			
-		}
-		
-	}
-	
 	private class ServerListener extends Thread {
 
 		public void run () {

@@ -85,6 +85,9 @@ public class ClientCommunicator extends Thread{
 		else if (objProposition == 'D') {
 			ps.println(protocol.protocolDriver((Driver) obj));
 		}
+		else {
+			ps.println(obj);
+		}
 		
 		System.out.println("Sent message to Client");
 	}
@@ -122,7 +125,10 @@ public class ClientCommunicator extends Thread{
 				server.delete(id);
 			}
 		}
-		
+		else if (operation == 'i'){
+			o = server.getLastId();
+		}
+
 		return o;
 	}
 

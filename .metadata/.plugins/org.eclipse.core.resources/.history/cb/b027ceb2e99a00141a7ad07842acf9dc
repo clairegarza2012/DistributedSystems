@@ -90,7 +90,7 @@ public class Server {
 		store.deleteObject("" + id);
 	}
 	
-	public String getId(int index){
-		return store.getId(index);
+	public void getId(int index){
+		store.getId(index);
 	}
 }

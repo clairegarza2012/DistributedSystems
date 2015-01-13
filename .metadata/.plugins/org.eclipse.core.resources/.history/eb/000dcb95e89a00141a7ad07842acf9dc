@@ -1,7 +1,5 @@
 package edu.neumont.csc380;
 
-import java.util.ArrayList;
-
 import com.hallaLib.HallaStor;
 
 public class Store {
@@ -10,10 +8,7 @@ public class Store {
 		
 	private static Store instance;
 	
-	private static ArrayList<String> ids;
-	
 	private Store(){
-		ids = new ArrayList<String>();
 		store = HallaStor.getInstance();
 	}
 	
@@ -30,13 +25,7 @@ public class Store {
 		return instance;
 	}
 
-	public String getId(int index){
-
-		return ids.get(index);
-	}
-	
 	public void addObject(String key, Object value){
-		ids.add(key);
 		store.add(key, value);
 	}
 			
@@ -49,7 +38,6 @@ public class Store {
 	}
 	
 	public void deleteObject(String key){
-		ids.remove(key);
 		store.delete(key);
 	}
 	
