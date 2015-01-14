@@ -12,8 +12,6 @@ public class Server {
 	
 	private Server server;
 	
-	private IdGenerator idGenerator;
-
 	public static void main(String[] args){
 
 		try {
@@ -30,8 +28,6 @@ public class Server {
 		System.out.println("Server Created");
 
 		store = Store.getInstance();
-
-		idGenerator = IdGenerator.getInstance();
 		
 		server = this;
 		
@@ -64,20 +60,14 @@ public class Server {
 		}
 	}
 	
-	public int create(Object obj){
-
-		idGenerator.incrementId();
-		
-		int id = idGenerator.getId();
-				
-		store.addObject("" + id, obj);
-		
-		return id;
+	public void create(String id, Object obj){
+	
+		store.addObject(id, obj);
 	}
 
-	public Object read(int id){
+	public Object read(String id){
 
-		return store.getObject("" + id);
+		return store.getObject(id);
 	}
 
 	public void update(String id, Object obj){
@@ -85,12 +75,12 @@ public class Server {
 		store.updateObject(id, obj);
 	}
 
-	public void delete(int id){
+	public void delete(String id){
 
-		store.deleteObject("" + id);
+		store.deleteObject(id);
 	}
 	
-	public String getId(int index){
-		return store.getId(index);
+	public String getIds(){
+		return store.getIds();
 	}
 }

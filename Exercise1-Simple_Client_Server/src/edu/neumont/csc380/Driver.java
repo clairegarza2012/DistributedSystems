@@ -53,6 +53,10 @@ public class Driver {
 	public void setMale(boolean isMale) {
 		this.isMale = isMale;
 	}
+	
+	public void setId(int id){
+		this.id = id;
+	}
 
 	@Override
 	public String toString() {

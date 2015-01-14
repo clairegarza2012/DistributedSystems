@@ -29,15 +29,22 @@ public class Store {
 		
 		return instance;
 	}
+	
+	public String getIds(){
 
-	public String getId(int index){
-
-		return ids.get(index);
+		String string = "";
+		
+		for (int i = 0; i < ids.size(); i++){
+			string += ids.get(i);
+		}
+		
+		return string;
 	}
 	
 	public void addObject(String key, Object value){
+		
+		store.add(key, value);		
 		ids.add(key);
-		store.add(key, value);
 	}
 			
 	public Object getObject(String key){

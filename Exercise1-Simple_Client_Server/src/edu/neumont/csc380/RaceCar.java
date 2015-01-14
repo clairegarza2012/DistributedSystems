@@ -65,6 +65,10 @@ public class RaceCar {
 		this.quarterMileTime = quarterMileTime;
 	}
 
+	public void setId(int id){
+		this.id = id;
+	}
+	
 	@Override
 	public String toString() {
 		return "RaceCar [id= " + id + ", make=" + make + ", model=" + model + ", horsePower="
