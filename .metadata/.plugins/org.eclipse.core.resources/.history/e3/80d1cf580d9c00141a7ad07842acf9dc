@@ -1,0 +1,157 @@
+package edu.neumont.csc380;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.Socket;
+
+public class ClientCommunicator extends Thread{
+
+	private Protocol protocol;
+	private Server server;
+
+	private PrintStream ps;
+	private BufferedReader buffReader;
+
+	private IdGenerator idGenerator;
+
+	public ClientCommunicator(Socket socket, Server server){
+
+		protocol = new Protocol();
+		idGenerator = IdGenerator.getInstance();
+
+		this.server = server;
+
+		try {
+			OutputStream out = socket.getOutputStream();
+
+			ps = new PrintStream(out, true);
+
+			InputStream is = socket.getInputStream();
+
+			buffReader = new BufferedReader(new InputStreamReader(is));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void run(){
+
+		while (true){
+
+			try {
+				while (buffReader.ready()){
+
+					String line = buffReader.readLine();
+
+					System.out.println("Line: " + line);
+					System.out.println("Message Recieved!\n" + Integer.parseInt(line.substring(2, 18), 2));
+
+					char operation = line.charAt(0);
+
+					String object = line.substring(1);
+
+					synchronized (object) {
+
+						System.out.println("Object: " + object);
+
+						Object obj = doOperation(operation, object, protocol);
+
+						if (obj != null){
+							sendObjectToClient(obj);
+						}
+
+					}
+				}
+			} catch (NumberFormatException | IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	private void sendObjectToClient(Object obj) {
+
+		char objProposition = obj.toString().charAt(0);
+
+		if (objProposition == 'R'){
+			ps.println(protocol.protocolRacecar((RaceCar) obj));
+		}
+		else if (objProposition == 'D') {
+			ps.println(protocol.protocolDriver((Driver) obj));
+		}
+		else if ( !((boolean) obj) ){
+			ps.println("Server Is Full!");
+			System.out.println("Server is full!");
+		}
+		else{
+			ps.println("gr" + obj);
+		}
+		System.out.println("Sent message to Client");
+	}
+
+	private Object doOperation(char operation, String object, Protocol protocol) {
+
+		Object o = null;
+		String id = object.substring(0, 17);
+
+		if (operation == 'u'){
+
+			Object obj = null;
+
+			if (object.charAt(0) == 'r'){
+				obj = protocol.deprotocolRacecar(object);
+			}
+			else {
+				obj = protocol.deprotocolDriver(object);
+			}
+			System.out.println("Update!");
+			server.update(id, obj); 
+		}
+		else if (operation == 'c'){
+
+			idGenerator.incrementId();
+
+			int idNum = idGenerator.getId();
+
+			Object obj;
+
+			if (object.charAt(0) == 'r'){
+				RaceCar racecar = protocol.deprotocolRacecar(object);
+				racecar.setId(idNum);
+				obj = racecar;
+			}
+			else {
+				Driver driver = protocol.deprotocolDriver(object);
+				driver.setId(idNum);
+				obj = driver;
+			}				
+
+			String binaryId = String.format("%16s", Integer.toBinaryString(idNum)).replace(" ", "0");
+
+			o = server.create("" + object.charAt(0) + binaryId, obj); 
+
+		}
+		else if (operation == 'r' || operation == 'd'){
+
+			if (operation == 'r') {
+				o = server.read(id);
+			}
+			else {
+				server.delete(id);
+			}
+		}
+		else  if (operation == 'g'){
+			String ids = server.getIds();
+			System.out.println(ids);
+			o = ids;
+		}
+
+		return o;
+	}
+
+}

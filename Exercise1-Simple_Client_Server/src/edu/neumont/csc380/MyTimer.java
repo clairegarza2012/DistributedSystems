@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 public class MyTimer implements ActionListener{
 
 	private int count = 0;
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		count++;
@@ -15,14 +15,23 @@ public class MyTimer implements ActionListener{
 
 
 	public String getTime() {
-								
+
 		int minutes = count / 60;
-		
-		int seconds = count - (minutes * 60);
-		
+
 		int hours = minutes / 60;
+
+		int seconds = 0;
+		
+		if (minutes == 0 && hours == 0){
+			seconds = count;
+		}else if (minutes == 0 && hours != 0){
+			seconds = count - (hours * 60 * 60);
+		}
+		else {
+			seconds = count - (minutes * 60);
+		}
 		
 		return hours + ":" + minutes + ":" + seconds;
 	}
-	
+
 }

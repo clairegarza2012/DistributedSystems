@@ -14,10 +14,6 @@ import javax.swing.Timer;
 public class Client {
 
 	private boolean serverFull = false;
-	private boolean allIds = false;
-
-	private BufferedReader buffReader;
-	private PrintStream ps;
 
 	private Protocol protocol;
 
@@ -36,167 +32,168 @@ public class Client {
 		}
 	}
 
-	@SuppressWarnings("resource")
 	public Client() throws IOException{
 
-		Socket clientSocket = new Socket("localhost", 2222);
+		initializeVariablesAndStartTimer();
 
-		System.out.println("Client Socket Created!");
+		// make objects
+		createObjects();
 
-		InputStream is = clientSocket.getInputStream();
-		buffReader = new BufferedReader(new InputStreamReader(is));
+		// get ids
+		getIds();
 
-		OutputStream os = clientSocket.getOutputStream();
-		ps = new PrintStream(os, true);
+		System.out.println("Number Of Id's: " + ids.size());
+
+		// read objects
+		readObjects();
+
+		// update objects
+		// updating the objects is in the read function
+
+		// read objects
+		readObjects();
+
+		stopTimer();
+	}
+
+	private void initializeVariablesAndStartTimer() throws IOException {
 
 		ids = new ArrayList<String>();
 		protocol = new Protocol();
 
 		myTimer = new MyTimer();
 		timer = new Timer(1000, myTimer);
-		timer.start();
-
-		ServerListener listener = new ServerListener();
-		listener.start();
-
-		Talker talker = new Talker();
-		talker.start();
+		timer.start();		
 	}
 
-	private class Talker extends Thread {
+	private void createObjects() throws IOException {
 
-		public void run(){
+		Socket clientSocket = new Socket("localhost", 2222);
 
-			while(!serverFull){
+		System.out.println("Client Socket Created!");
+		
+		InputStream is = clientSocket.getInputStream();
+		BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
 
-				// send objects to server
-				String obj = ObjectGenerator.generate();
+		OutputStream os = clientSocket.getOutputStream();
+		PrintStream ps = new PrintStream(os, true);
+		
+		while (!serverFull) {
 
-				System.out.println("Object Created!" + " \n" + obj);
+			String obj = ObjectGenerator.generate();
 
-				ps.println("c" + obj);
+			System.out.println("Object Created!" + " \n" + obj);
 
-				System.out.println("Object Pushed to server: type:" + obj.charAt(0) + " id: " + Integer.parseInt(obj.substring(1, 17), 2) );
+			ps.println("c" + obj);
 
-				try {
-					Thread.sleep(5000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
+			String objectSucessfullyCreated = buffReader.readLine();
 
-			// Communicate to server to get all the ids			
-			ps.println("gg" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
+			serverFull = ( objectSucessfullyCreated.equals("true") ) ? false : true;
+
+			System.out.println("Server Full: " + serverFull);
 		}
+
+		buffReader.close();
+		ps.close();
+
+		clientSocket.close();
 	}
 
-	private class ServerListener extends Thread {
+	private void getIds() throws IOException {
 
-		public void run () {
+		Socket clientSocket = new Socket("localhost", 2222);
 
-			while (true){
-				try {
-					while(buffReader.ready()){
+		System.out.println("Client Socket Created!");
+		
+		InputStream is = clientSocket.getInputStream();
+		BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
 
-						String line = buffReader.readLine();
-						System.out.println("Message from Server: \n" + line);
+		OutputStream os = clientSocket.getOutputStream();
+		PrintStream ps = new PrintStream(os, true);
+		
+		ps.println("gg" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
 
-						if (line.equals("Server Is Full!")) {
-							serverFull = true;
-						}else if (line.charAt(0) == 'r') {
-							RaceCar racecar = protocol.deprotocolRacecar(line);
-							updateRacecar(racecar);
-						}else if (line.charAt(0) == 'd') {
-							Driver driver = protocol.deprotocolDriver(line);
-							updateDriver(driver);
-						}else if (line.substring(0, 2).equals("gr")){
-							System.out.println("All Ids");
-							getIds(line.substring(2));
+		String serverMessage = buffReader.readLine();
 
-							ReadAndUpdate rau = new ReadAndUpdate();
-							rau.start();
-						}
+		System.out.println("All Ids");
 
-					}
-				} catch (IOException e) {
-					e.printStackTrace();
-				} 
-			}
+		getIds(serverMessage);
+		
+		buffReader.close();
+		ps.close();
 
-		}
+		clientSocket.close();
+	}
 
-		private void getIds(String line) {
-			System.out.println("Getting Ids");
+	private void getIds(String line) {
 
-			int lineBreak = 17;
-			int placeInLine = 0;
+		System.out.println("Getting Ids");
 
-			System.out.println("Line Length: " + line.length());
-			
-			while (placeInLine < (line.length() - 1)){
+		int lineBreak = 17;
+		int placeInLine = 0;
 
-				String id = line.substring(placeInLine, placeInLine + lineBreak);
-				System.out.println("Id: " + id);
-				ids.add(id);
-				placeInLine += lineBreak;
-			}			
-		}
+		System.out.println("Line Length: " + line.length());
 
-		private void updateRacecar(RaceCar racecar) {
+		while (placeInLine < (line.length() - 1)){
 
-			int horsepower = racecar.getHorsePower();
-			racecar.setHorsePower(horsepower + 1003);
-
-			String racecarProtocol = protocol.protocolRacecar(racecar);
-			ps.println("u" + racecarProtocol);
-		}
-
-		private void updateDriver(Driver driver) {
-
-			int age = driver.getAge();
-			driver.setAge(age + 100);
-
-			String driverProtocol = protocol.protocolDriver(driver);
-			ps.println("u" + driverProtocol);
-		}
+			String id = line.substring(placeInLine, placeInLine + lineBreak);
+			System.out.println("Id: " + id);
+			ids.add(id);
+			placeInLine += lineBreak;
+		}		
 
 	}
 
-	private class ReadAndUpdate extends Thread {
+	private void readObjects() throws IOException {
 
-		public void run () {
+		Socket clientSocket = new Socket("localhost", 2222);
 
-			System.out.println("Number Of Id's: " + ids.size());
+		System.out.println("Client Socket Created!");
+		
+		InputStream is = clientSocket.getInputStream();
+		BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
 
-			for (int index = 0; index < ids.size(); index++) {
+		OutputStream os = clientSocket.getOutputStream();
+		PrintStream ps = new PrintStream(os, true);
+		
+		for (int index = 0; index < ids.size(); index++) {
 
-				synchronized (ids.get(index)){
-					ps.println("r" + ids.get(index));
-	
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
+			synchronized (ids.get(index)){
+
+				ps.println("r" + ids.get(index));
+
+				String serverMessage = buffReader.readLine();
+
+				if (serverMessage.charAt(0) == 'r') {
+					RaceCar racecar = protocol.deprotocolRacecar(serverMessage);
+
+					int horsepower = racecar.getHorsePower();
+					racecar.setHorsePower(horsepower + 1003);
+
+					String racecarProtocol = protocol.protocolRacecar(racecar);
+					ps.println("u" + racecarProtocol);
+				}else if (serverMessage.charAt(0) == 'd') {
+					Driver driver = protocol.deprotocolDriver(serverMessage);
+
+					int age = driver.getAge();
+					driver.setAge(age + 100);
+
+					String driverProtocol = protocol.protocolDriver(driver);
+					ps.println("u" + driverProtocol);
 				}
 			}
-
-			for (int index = 0; index < ids.size(); index++) {
-
-				synchronized (ids.get(index)){
-					ps.println("r" + ids.get(index));
-	
-					try {
-						Thread.sleep(5000);
-					} catch (InterruptedException e) {
-						e.printStackTrace();
-					}
-				}
-			}
-
-			timer.stop();
-			System.out.println("Time: "  + myTimer.getTime());
 		}
+
+		buffReader.close();
+		ps.close();
+
+		clientSocket.close();
+	}
+
+	private void stopTimer() throws IOException {
+
+		timer.stop();
+		System.out.println("Time: "  + myTimer.getTime());	
 	}
 
 }

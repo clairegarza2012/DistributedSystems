@@ -60,9 +60,9 @@ public class Server {
 		}
 	}
 	
-	public void create(String id, Object obj){
+	public boolean create(String id, Object obj){
 	
-		store.addObject(id, obj);
+		return store.addObject(id, obj);
 	}
 
 	public Object read(String id){
