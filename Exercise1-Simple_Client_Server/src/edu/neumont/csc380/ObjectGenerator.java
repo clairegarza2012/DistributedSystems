@@ -14,22 +14,17 @@ public class ObjectGenerator {
 		
 		Protocol protocol = new Protocol();
 		
-		if (i == 0){
-			obj = protocol.protocolRacecar(makeRacecar());
-		}
-		else {
-			obj = protocol.protocolDriver(makeDriver());
-		}
+		obj = (i == 0) ? protocol.protocolObject(makeRacecar()) : protocol.protocolObject(makeDriver());
 		
 		return obj;
 	}
 
-	private static RaceCar makeRacecar() {
+	private static HallaStorObject makeRacecar() {
 
 		return RacecarFactory.makeCar();
 	}
 	
-	private static Driver makeDriver() {
+	private static HallaStorObject makeDriver() {
 
 		return DriverFactory.makeDriver();
 	}

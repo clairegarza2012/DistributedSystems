@@ -47,9 +47,9 @@ public class ClientCommunicator extends Thread{
 				while (buffReader.ready()){
 
 					String line = buffReader.readLine();
-
-					System.out.println("Line: " + line);
+					
 					System.out.println("Message Recieved!");
+					System.out.println("Line: " + line);
 
 					char operation = line.charAt(0);
 
@@ -64,7 +64,7 @@ public class ClientCommunicator extends Thread{
 						if (obj != null){
 							sendObjectToClient(obj);
 						}
-
+					
 					}
 				}
 			} catch (NumberFormatException | IOException e) {
@@ -78,13 +78,9 @@ public class ClientCommunicator extends Thread{
 
 		char objProposition = obj.toString().charAt(0);
 
-		if (objProposition == 'R'){
+		if (objProposition == 'R' || objProposition == 'D'){
 			
-			ps.println(protocol.protocolRacecar((RaceCar) obj));
-		}
-		else if (objProposition == 'D') {
-			
-			ps.println(protocol.protocolDriver((Driver) obj));
+			ps.println(protocol.protocolObject((HallaStorObject) obj));
 		}
 		else {
 		
@@ -99,51 +95,37 @@ public class ClientCommunicator extends Thread{
 		Object o = null;
 		String id = object.substring(0, 17);
 
-		if (operation == 'u'){
+		if (operation == 'u' || operation == 'c'){
 
-			Object obj = null;
+			HallaStorObject obj = protocol.deprotocolObject(object);
 
-			if (object.charAt(0) == 'r'){
-				obj = protocol.deprotocolRacecar(object);
+			if (operation == 'u'){
+				
+				server.update(id, obj); 
 			}
-			else {
-				obj = protocol.deprotocolDriver(object);
+			else{
+				
+				String binaryId = id;
+				
+				if (Integer.parseInt(id, 2) == 0) { // makes sure that the object doesn't already have an id.. then will create one
+					
+					idGenerator.incrementId();
+	
+					int idNum = idGenerator.getId();
+	
+					obj.setId(idNum);
+	
+					binaryId = String.format("%16s", Integer.toBinaryString(idNum)).replace(" ", "0");
+				}
+				
+				o = server.create("" + object.charAt(0) + binaryId, obj); 
 			}
-			System.out.println("Update!");
-			server.update(id, obj); 
 		}
-		else if (operation == 'c'){
-
-			idGenerator.incrementId();
-
-			int idNum = idGenerator.getId();
-
-			Object obj;
-
-			if (object.charAt(0) == 'r'){
-				RaceCar racecar = protocol.deprotocolRacecar(object);
-				racecar.setId(idNum);
-				obj = racecar;
-			}
-			else {
-				Driver driver = protocol.deprotocolDriver(object);
-				driver.setId(idNum);
-				obj = driver;
-			}				
-
-			String binaryId = String.format("%16s", Integer.toBinaryString(idNum)).replace(" ", "0");
-
-			o = server.create("" + object.charAt(0) + binaryId, obj); 
-
+		else if (operation == 'r'){
+			o = server.read(id);
 		}
-		else if (operation == 'r' || operation == 'd'){
-
-			if (operation == 'r') {
-				o = server.read(id);
-			}
-			else {
-				server.delete(id);
-			}
+		else if (operation == 'd'){
+			server.delete(id);
 		}
 		else  if (operation == 'g'){
 			String ids = server.getIds();

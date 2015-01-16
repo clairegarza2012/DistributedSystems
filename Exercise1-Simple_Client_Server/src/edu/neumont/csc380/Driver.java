@@ -1,6 +1,6 @@
 package edu.neumont.csc380;
 
-public class Driver {
+public class Driver implements HallaStorObject{
 
 	private String name;
 	private int age;
@@ -54,8 +54,14 @@ public class Driver {
 		this.isMale = isMale;
 	}
 	
-	public void setId(int id){
-		this.id = id;
+	@Override
+	public void setId(int id) {
+		this.id = id;	
+	}
+
+	@Override
+	public void update() {
+		this.age += 100;
 	}
 
 	@Override

@@ -8,8 +8,41 @@ public class Protocol {
 	public Protocol(){
 		
 	}
+	
+	public String protocolObject(HallaStorObject obj){
+		
+		String s = "";
+		
+		char objProposition = obj.toString().charAt(0);
+		
+		if (objProposition == 'R'){
+			s = protocolRacecar((RaceCar)obj);
+		}
+		else{
+			s = protocolDriver((Driver)obj);
+		}
+		
+		
+		return s;
+	}
+	
+	public HallaStorObject deprotocolObject(String obj){
+		
+		HallaStorObject o = null;
+		
+		char prop = obj.charAt(0);
+		
+		if (prop == 'r'){
+			o = deprotocolRacecar(obj);
+		}
+		else {
+			o = deprotocolDriver(obj);
+		}
+		
+		return o;
+	}
 
-	public String protocolRacecar(RaceCar car){
+	private String protocolRacecar(RaceCar car){
 		
 		int id = car.getId();
 		String make = car.getMake();
@@ -30,7 +63,7 @@ public class Protocol {
 		return "r" + proId + proMake + proModel + proHorsePower + proQuarterMileTime;
 	}
 	
-	public RaceCar deprotocolRacecar(String racecarProtocol){
+	private RaceCar deprotocolRacecar(String racecarProtocol){
 		
 		int binaryStringLength = 16;
 		
@@ -65,7 +98,7 @@ public class Protocol {
 		return new RaceCar(id, make, model, horsePower, quarterMileTime);
 	}
 	
-	public String protocolDriver(Driver driver){
+	private String protocolDriver(Driver driver){
 		
 		int id = driver.getId();
 		String name = driver.getName();
@@ -83,7 +116,7 @@ public class Protocol {
 		return "d" + proId + proName + proAge + proIsMale;
 	}
 	
-	public Driver deprotocolDriver(String driverProtocol){
+	private Driver deprotocolDriver(String driverProtocol){
 		
 		int binaryStringLength = 16;
 		

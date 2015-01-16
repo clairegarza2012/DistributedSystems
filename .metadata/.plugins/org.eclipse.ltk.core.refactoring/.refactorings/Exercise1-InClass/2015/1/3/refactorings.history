@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename package &apos;edu.neuomnt.csc350&apos; to &apos;edu.neuomnt.csc380&apos;&#x0D;&#x0A;- Original project: &apos;Exercise1-InClass&apos;&#x0D;&#x0A;- Original element: &apos;Exercise1-InClass/src/edu.neuomnt.csc350&apos;&#x0D;&#x0A;- Renamed element: &apos;Exercise1-InClass/src/edu.neuomnt.csc380&apos;&#x0D;&#x0A;- Update references to refactored element&#x0D;&#x0A;- Update textual occurrences in comments and strings" description="Rename package &apos;edu.neuomnt.csc350&apos;" flags="589830" hierarchical="false" id="org.eclipse.jdt.ui.rename.package" input="/src&lt;edu.neuomnt.csc350" name="edu.neuomnt.csc380" qualified="false" references="true" stamp="1421337745097" textual="false" version="1.0"/>
+</session>

@@ -1,6 +1,6 @@
 package edu.neumont.csc380;
 
-public class RaceCar {
+public class RaceCar implements HallaStorObject{
 
 	private String make;
 	private String model;
@@ -65,8 +65,14 @@ public class RaceCar {
 		this.quarterMileTime = quarterMileTime;
 	}
 
-	public void setId(int id){
-		this.id = id;
+	@Override
+	public void setId(int id) {
+		this.id = id;	
+	}
+
+	@Override
+	public void update() {
+		this.horsePower += 1000;
 	}
 	
 	@Override
@@ -74,5 +80,6 @@ public class RaceCar {
 		return "RaceCar [id= " + id + ", make=" + make + ", model=" + model + ", horsePower="
 				+ horsePower + ", quarterMileTime=" + quarterMileTime + "]";
 	}
+
 	
 }

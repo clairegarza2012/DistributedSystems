@@ -71,13 +71,13 @@ public class Client {
 		Socket clientSocket = new Socket("localhost", 2222);
 
 		System.out.println("Client Socket Created!");
-		
+
 		InputStream is = clientSocket.getInputStream();
 		BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
 
 		OutputStream os = clientSocket.getOutputStream();
 		PrintStream ps = new PrintStream(os, true);
-		
+
 		while (!serverFull) {
 
 			String obj = ObjectGenerator.generate();
@@ -95,6 +95,8 @@ public class Client {
 
 		buffReader.close();
 		ps.close();
+		is.close();
+		os.close();
 
 		clientSocket.close();
 	}
@@ -104,13 +106,13 @@ public class Client {
 		Socket clientSocket = new Socket("localhost", 2222);
 
 		System.out.println("Client Socket Created!");
-		
+
 		InputStream is = clientSocket.getInputStream();
 		BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
 
 		OutputStream os = clientSocket.getOutputStream();
 		PrintStream ps = new PrintStream(os, true);
-		
+
 		ps.println("gg" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
 
 		String serverMessage = buffReader.readLine();
@@ -118,9 +120,11 @@ public class Client {
 		System.out.println("All Ids");
 
 		getIds(serverMessage);
-		
+
 		buffReader.close();
 		ps.close();
+		is.close();
+		os.close();
 
 		clientSocket.close();
 	}
@@ -149,13 +153,13 @@ public class Client {
 		Socket clientSocket = new Socket("localhost", 2222);
 
 		System.out.println("Client Socket Created!");
-		
+
 		InputStream is = clientSocket.getInputStream();
 		BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
 
 		OutputStream os = clientSocket.getOutputStream();
 		PrintStream ps = new PrintStream(os, true);
-		
+
 		for (int index = 0; index < ids.size(); index++) {
 
 			synchronized (ids.get(index)){
@@ -164,28 +168,20 @@ public class Client {
 
 				String serverMessage = buffReader.readLine();
 
-				if (serverMessage.charAt(0) == 'r') {
-					RaceCar racecar = protocol.deprotocolRacecar(serverMessage);
+				HallaStorObject oDeprotocol = protocol.deprotocolObject(serverMessage);
 
-					int horsepower = racecar.getHorsePower();
-					racecar.setHorsePower(horsepower + 1003);
+				oDeprotocol.update();
 
-					String racecarProtocol = protocol.protocolRacecar(racecar);
-					ps.println("u" + racecarProtocol);
-				}else if (serverMessage.charAt(0) == 'd') {
-					Driver driver = protocol.deprotocolDriver(serverMessage);
+				String oProtocol = protocol.protocolObject(oDeprotocol);
 
-					int age = driver.getAge();
-					driver.setAge(age + 100);
-
-					String driverProtocol = protocol.protocolDriver(driver);
-					ps.println("u" + driverProtocol);
-				}
+				ps.println("u" + oProtocol);
 			}
 		}
 
 		buffReader.close();
 		ps.close();
+		is.close();
+		os.close();
 
 		clientSocket.close();
 	}
