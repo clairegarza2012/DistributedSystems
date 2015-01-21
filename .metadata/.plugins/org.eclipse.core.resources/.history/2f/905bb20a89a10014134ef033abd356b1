@@ -1,20 +1,26 @@
 package edu.neumont.csc380;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Client {
 
 	private ArrayList<String> ids;
 	private ClientCRUD crud;
-
+	
 	private long startTime;
-
+	
 	public static void main(String[] args){
 
-		new Client();
+		try {
+			new Client();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
-	public Client() {
+	public Client() throws IOException{
 
 		initializeVariablesAndStartTimer();
 
@@ -24,17 +30,17 @@ public class Client {
 
 		System.out.println("Number Of Id's: " + ids.size());
 
-		readAndUpdateObjects();
+		readObjects();
 
 		readObjects();
 
 		stopTimerAndPrintTime();
 	}
 
-	private void initializeVariablesAndStartTimer() {
+	private void initializeVariablesAndStartTimer() throws IOException {
 
 		startTime = System.currentTimeMillis();
-
+		
 		ids = new ArrayList<String>();
 		crud = new ClientCRUD();	
 	}
@@ -47,7 +53,7 @@ public class Client {
 
 			HallaStorObject obj = ObjectGenerator.generate();
 
-			System.out.println(obj.toString());
+			System.out.println("Object Created!" + " \n" + obj.toString());
 
 			serverFull = crud.create("", obj);
 		}
@@ -57,7 +63,7 @@ public class Client {
 	private void getObjectIds() {
 
 		String ids = null;
-
+		
 		ids = crud.getIds();
 
 		getIds(ids);
@@ -82,43 +88,22 @@ public class Client {
 
 	}
 
-	private void readAndUpdateObjects(){
-
-		int index = 0;
-
-		while (index < ids.size()) {
-
-			if (crud.lock(ids.get(index))) {
-
-				HallaStorObject obj = (HallaStorObject) crud.read(ids.get(index));
-				
-				System.out.println("Read and Update: " + obj.toString());
-				
-				obj.update();
-
-				crud.update(ids.get(index), obj);
-
-				crud.unlock();
-
-				index++;
-			}
-		}
-	}
-
 	private void readObjects() {
 
 		int index = 0;
-
+		
 		while (index < ids.size()) {
 
 			if (crud.lock(ids.get(index))) {
 
 				HallaStorObject obj = (HallaStorObject) crud.read(ids.get(index));
 
-				System.out.println("Read: " + obj.toString());
+				obj.update();
+				
+				crud.update(ids.get(index), obj);
 				
 				crud.unlock();
-
+				
 				index++;
 			}
 		}
@@ -128,19 +113,19 @@ public class Client {
 	private void stopTimerAndPrintTime() {
 
 		long endTime = System.currentTimeMillis();
-
+		
 		long finalTime = endTime - startTime;
-
-		System.out.println("Time: " + formatTimeFromMilliseconds(finalTime));
+		
+		System.out.println("Time: " + getTime(finalTime));
 	}
+	
+	private String getTime(long time){
+		
+		long second = (time / 1000) % 60;
+		long minute = (time / (1000 * 60)) % 60;
+		long hour = (time / (1000 * 60 * 60)) % 24;
 
-	private String formatTimeFromMilliseconds(long millis){
-
-		long second = (millis / 1000) % 60;
-		long minute = (millis / (1000 * 60)) % 60;
-		long hour = (millis / (1000 * 60 * 60)) % 24;
-
-		return String.format("%02d:%02d:%02d:%d", hour, minute, second, millis);
+		return String.format("%02d:%02d:%02d:%d", hour, minute, second, time);
 	}
 
 }

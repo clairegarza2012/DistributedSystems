@@ -47,7 +47,7 @@ public class Client {
 
 			HallaStorObject obj = ObjectGenerator.generate();
 
-			System.out.println(obj.toString());
+			System.out.println("Object Created!" + " \n" + obj.toString());
 
 			serverFull = crud.create("", obj);
 		}
@@ -91,9 +91,7 @@ public class Client {
 			if (crud.lock(ids.get(index))) {
 
 				HallaStorObject obj = (HallaStorObject) crud.read(ids.get(index));
-				
-				System.out.println("Read and Update: " + obj.toString());
-				
+
 				obj.update();
 
 				crud.update(ids.get(index), obj);

@@ -6,9 +6,9 @@ public class Client {
 
 	private ArrayList<String> ids;
 	private ClientCRUD crud;
-
+	
 	private long startTime;
-
+	
 	public static void main(String[] args){
 
 		new Client();
@@ -34,7 +34,7 @@ public class Client {
 	private void initializeVariablesAndStartTimer() {
 
 		startTime = System.currentTimeMillis();
-
+		
 		ids = new ArrayList<String>();
 		crud = new ClientCRUD();	
 	}
@@ -47,7 +47,7 @@ public class Client {
 
 			HallaStorObject obj = ObjectGenerator.generate();
 
-			System.out.println(obj.toString());
+			System.out.println("Object Created!" + " \n" + obj.toString());
 
 			serverFull = crud.create("", obj);
 		}
@@ -57,7 +57,7 @@ public class Client {
 	private void getObjectIds() {
 
 		String ids = null;
-
+		
 		ids = crud.getIds();
 
 		getIds(ids);
@@ -83,42 +83,42 @@ public class Client {
 	}
 
 	private void readAndUpdateObjects(){
-
-		int index = 0;
-
+		
+int index = 0;
+		
 		while (index < ids.size()) {
 
 			if (crud.lock(ids.get(index))) {
 
 				HallaStorObject obj = (HallaStorObject) crud.read(ids.get(index));
-				
-				System.out.println("Read and Update: " + obj.toString());
-				
+
 				obj.update();
-
+				
 				crud.update(ids.get(index), obj);
-
+				
 				crud.unlock();
-
+				
 				index++;
 			}
 		}
 	}
-
+	
 	private void readObjects() {
 
 		int index = 0;
-
+		
 		while (index < ids.size()) {
 
 			if (crud.lock(ids.get(index))) {
 
 				HallaStorObject obj = (HallaStorObject) crud.read(ids.get(index));
 
-				System.out.println("Read: " + obj.toString());
+				obj.update();
+				
+				crud.update(ids.get(index), obj);
 				
 				crud.unlock();
-
+				
 				index++;
 			}
 		}
@@ -128,14 +128,14 @@ public class Client {
 	private void stopTimerAndPrintTime() {
 
 		long endTime = System.currentTimeMillis();
-
+		
 		long finalTime = endTime - startTime;
-
+		
 		System.out.println("Time: " + formatTimeFromMilliseconds(finalTime));
 	}
-
+	
 	private String formatTimeFromMilliseconds(long millis){
-
+		
 		long second = (millis / 1000) % 60;
 		long minute = (millis / (1000 * 60)) % 60;
 		long hour = (millis / (1000 * 60 * 60)) % 24;

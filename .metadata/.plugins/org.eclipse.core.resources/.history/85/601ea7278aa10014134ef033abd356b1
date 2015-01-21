@@ -47,7 +47,7 @@ public class Client {
 
 			HallaStorObject obj = ObjectGenerator.generate();
 
-			System.out.println(obj.toString());
+			System.out.println("Object Created!" + " \n" + obj.toString());
 
 			serverFull = crud.create("", obj);
 		}

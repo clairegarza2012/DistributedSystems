@@ -3,10 +3,12 @@ package edu.neumont.csc380;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
 
 public class Server{
 
 	private ServerSocket serverSocket;
+	//private LinkedList<Socket> queue;
 	
 	public static void main(String[] args){
 
@@ -20,6 +22,8 @@ public class Server{
 	public Server() throws IOException{
 
 		serverSocket = new ServerSocket(2222); // 2222 is the port
+
+		//queue = new LinkedList<Socket>();
 		
 		System.out.println("Server Created");
 
@@ -36,7 +40,9 @@ public class Server{
 				
 				try {
 					Socket clientSocket = serverSocket.accept();
-										
+					
+					//queue.add(clientSocket);
+					
 					System.out.println("client accepted!");
 
 					new ClientCommunicator(clientSocket);
