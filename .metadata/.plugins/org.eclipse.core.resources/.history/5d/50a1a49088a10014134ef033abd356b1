@@ -6,6 +6,9 @@ import javax.swing.Timer;
 
 public class Client {
 
+//	private Timer timer;
+//	private MyTimer myTimer;
+
 	private ArrayList<String> ids;
 	private ClientCRUD crud;
 	
@@ -43,7 +46,11 @@ public class Client {
 		startTime = System.currentTimeMillis();
 		
 		ids = new ArrayList<String>();
-		crud = new ClientCRUD();	
+		crud = new ClientCRUD();
+		
+//		myTimer = new MyTimer();
+//		timer = new Timer(1000, myTimer);
+//		timer.start();		
 	}
 
 	private void createObjects() {
@@ -118,6 +125,9 @@ public class Client {
 		long finalTime = endTime - startTime;
 		
 		System.out.println("Time: " + getTime(finalTime));
+		
+//		timer.stop();
+//		System.out.println("Time: "  + myTimer.getTime());	
 	}
 	
 	private String getTime(long time){

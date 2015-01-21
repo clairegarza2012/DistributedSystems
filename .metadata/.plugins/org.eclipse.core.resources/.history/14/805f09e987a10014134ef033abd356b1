@@ -6,10 +6,11 @@ import javax.swing.Timer;
 
 public class Client {
 
+	private Timer timer;
+	private MyTimer myTimer;
+
 	private ArrayList<String> ids;
 	private ClientCRUD crud;
-	
-	private long startTime;
 	
 	public static void main(String[] args){
 
@@ -40,10 +41,12 @@ public class Client {
 
 	private void initializeVariablesAndStartTimer() throws IOException {
 
-		startTime = System.currentTimeMillis();
-		
 		ids = new ArrayList<String>();
-		crud = new ClientCRUD();	
+		crud = new ClientCRUD();
+		
+		myTimer = new MyTimer();
+		timer = new Timer(1000, myTimer);
+		timer.start();		
 	}
 
 	private void createObjects() {
@@ -113,21 +116,10 @@ public class Client {
 
 	private void stopTimer() throws IOException {
 
-		long endTime = System.currentTimeMillis();
-		
-		long finalTime = endTime - startTime;
-		
-		System.out.println("Time: " + getTime(finalTime));
+		timer.stop();
+		System.out.println("Time: "  + myTimer.getTime());	
 	}
-	
-	private String getTime(long time){
-		
-		long second = (time / 1000) % 60;
-		long minute = (time / (1000 * 60)) % 60;
-		long hour = (time / (1000 * 60 * 60)) % 24;
 
-		return String.format("%02d:%02d:%02d:%d", hour, minute, second, time);
-	}
 
 }
 
