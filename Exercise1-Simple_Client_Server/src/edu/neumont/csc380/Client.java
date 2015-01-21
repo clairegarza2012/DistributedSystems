@@ -94,15 +94,21 @@ public class Client {
 
 	private void readObjects() {
 
-		for (int index = 0; index < ids.size(); index++) {
+		int index = 0;
+		
+		while (index < ids.size()) {
 
-			synchronized (ids.get(index)){
+			if (crud.lock(ids.get(index))) {
 
 				HallaStorObject obj = (HallaStorObject) crud.read(ids.get(index));
 
 				obj.update();
 				
 				crud.update(ids.get(index), obj);
+				
+				crud.unlock();
+				
+				index++;
 			}
 		}
 

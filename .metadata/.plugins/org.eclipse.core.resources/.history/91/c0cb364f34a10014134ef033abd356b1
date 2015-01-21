@@ -1,0 +1,56 @@
+package edu.neumont.csc380;
+
+import java.io.IOException;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Server{
+
+	private ServerSocket serverSocket;
+	
+	public static void main(String[] args){
+
+		try {
+			new Server();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Server() throws IOException{
+
+		serverSocket = new ServerSocket(2222); // 2222 is the port
+		
+		System.out.println("Server Created");
+
+		ClientListener listener = new ClientListener();
+
+		listener.start();
+	}
+
+	private class ClientListener extends Thread{
+
+		public void run(){
+
+			while (true){
+				
+				try {
+					Socket clientSocket = serverSocket.accept();
+					
+					System.out.println("client accepted!");
+
+					ClientCommunicator thread = new ClientCommunicator(clientSocket);
+
+					thread.start();
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			
+			}
+		
+		}	
+	
+	}
+
+}

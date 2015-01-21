@@ -25,7 +25,7 @@ public class ClientCRUD implements ICRUD{
 
 			Socket clientSocket = new Socket("localhost", 2222);
 
-			System.out.println("Client Socket Created!");
+			System.out.println("Create Requested!");
 
 			InputStream is = clientSocket.getInputStream();
 			BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
@@ -39,7 +39,7 @@ public class ClientCRUD implements ICRUD{
 	
 				String objectSucessfullyCreated = buffReader.readLine();
 	
-				serverFull = ( objectSucessfullyCreated.equals("true") ) ? false : true;
+				serverFull = !( objectSucessfullyCreated.equals("true") ) ;
 	
 				System.out.println("Server Full: " + serverFull);
 
@@ -62,12 +62,12 @@ public class ClientCRUD implements ICRUD{
 	public Object read(String id) {
 
 		Object object = null;
-		
+
 		try {
 
 			Socket clientSocket = new Socket("localhost", 2222);
 
-			System.out.println("Client Socket Created!");
+			System.out.println("Read Requested!");
 
 			InputStream is = clientSocket.getInputStream();
 			BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
@@ -91,24 +91,24 @@ public class ClientCRUD implements ICRUD{
 		catch (Exception e) {
 			e.printStackTrace();
 		}
-		
+
 		return object; 
 	}
 
 	@Override
 	public void update(String id, Object obj) {
-		
+
 		try {
 
 			Socket clientSocket = new Socket("localhost", 2222);
 
-			System.out.println("Client Socket Created!");
+			System.out.println("Update Requested!");
 
 			OutputStream os = clientSocket.getOutputStream();
 			PrintStream ps = new PrintStream(os, true);
 
 				String protocolObject = protocol.protocolObject((HallaStorObject) obj);
-				
+	
 				ps.println("u" + protocolObject);
 
 			ps.close();
@@ -123,17 +123,17 @@ public class ClientCRUD implements ICRUD{
 
 	@Override
 	public void delete(String id) {
-		
+
 		try {
 
 			Socket clientSocket = new Socket("localhost", 2222);
 
-			System.out.println("Client Socket Created!");
+			System.out.println("Delete Requested!");
 
 			OutputStream os = clientSocket.getOutputStream();
 			PrintStream ps = new PrintStream(os, true);
 
-				ps.println("d" + id);
+				ps.println("d" + id);	
 
 			ps.close();
 			os.close();
@@ -148,51 +148,104 @@ public class ClientCRUD implements ICRUD{
 
 	@Override
 	public String getIds() {
-		
+
 		String ids = "";
-		
+
 		try {
-		Socket clientSocket = new Socket("localhost", 2222);
+			Socket clientSocket = new Socket("localhost", 2222);
 
-		System.out.println("Client Socket Created!");
+			System.out.println("Get All Ids Requested!");
 
-		InputStream is = clientSocket.getInputStream();
-		BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
+			InputStream is = clientSocket.getInputStream();
+			BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
 
-		OutputStream os = clientSocket.getOutputStream();
-		PrintStream ps = new PrintStream(os, true);
+			OutputStream os = clientSocket.getOutputStream();
+			PrintStream ps = new PrintStream(os, true);
 
-			ps.println("gg" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
+				ps.println("gg" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
 	
-			String serverMessage = buffReader.readLine();
+				String serverMessage = buffReader.readLine();
 	
-			System.out.println("All Ids");
+				System.out.println("All Ids");
 	
-			ids = serverMessage;
+				ids = serverMessage;
 
-		buffReader.close();
-		ps.close();
-		is.close();
-		os.close();
+			buffReader.close();
+			ps.close();
+			is.close();
+			os.close();
 
-		clientSocket.close();
-		
+			clientSocket.close();
+
 		} catch (Exception e){
 			e.printStackTrace();
 		}
-		
+
 		return ids;
 	}
 
 	@Override
-	public void lock() {
-		// TODO Auto-generated method stub
+	public boolean lock(String id) {
 
+		boolean lockAccepted = false;
+
+		try {
+			Socket clientSocket = new Socket("localhost", 2222);
+
+			System.out.println("Lock Requested!");
+
+			InputStream is = clientSocket.getInputStream();
+			BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
+
+			OutputStream os = clientSocket.getOutputStream();
+			PrintStream ps = new PrintStream(os, true);
+
+				ps.println("l" + id);
+	
+				String serverMessage = buffReader.readLine();
+				
+				lockAccepted = serverMessage.equals("true");
+			
+			buffReader.close();
+			ps.close();
+			is.close();
+			os.close();
+
+			clientSocket.close();
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+		return lockAccepted;
 	}
 
 	@Override
 	public void unlock() {
-		// TODO Auto-generated method stub
+
+		try {
+			Socket clientSocket = new Socket("localhost", 2222);
+
+			System.out.println("Unlock Requested!");
+
+			InputStream is = clientSocket.getInputStream();
+			BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
+
+			OutputStream os = clientSocket.getOutputStream();
+			PrintStream ps = new PrintStream(os, true);
+
+				ps.println("lu" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
+
+			buffReader.close();
+			ps.close();
+			is.close();
+			os.close();
+
+			clientSocket.close();
+
+		} catch (Exception e){
+			e.printStackTrace();
+		}
 
 	}
 

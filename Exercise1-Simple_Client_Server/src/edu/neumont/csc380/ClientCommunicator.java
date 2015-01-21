@@ -8,12 +8,11 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 
-public class ClientCommunicator extends Thread{
+public class ClientCommunicator {
 
 	private Protocol protocol;
 
 	private PrintStream ps;
-	private BufferedReader buffReader;
 
 	private ServerCRUD crud;
 
@@ -24,50 +23,42 @@ public class ClientCommunicator extends Thread{
 		crud = new ServerCRUD();
 
 		try {
-			OutputStream out = socket.getOutputStream();
-
-			ps = new PrintStream(out, true);
-
+			OutputStream os = socket.getOutputStream();
 			InputStream is = socket.getInputStream();
 
-			buffReader = new BufferedReader(new InputStreamReader(is));
+			ps = new PrintStream(os, true);
+			BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
 
+			while (!buffReader.ready()){
+			}
+			
+			String line = buffReader.readLine();
+
+			System.out.println("Message Recieved!");
+			System.out.println("Line: " + line);
+
+			char operation = line.charAt(0);
+
+			String object = line.substring(1);
+
+			Object obj = doOperation(operation, object);
+
+			if (obj != null){
+				sendObjectToClient(obj);
+			}
+
+			buffReader.close();
+			is.close();
+			
+			ps.close();
+			os.close();
+			
+			socket.close();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-	}
-
-	public void run(){
-
-		while (true){
-
-			try {
-				while (buffReader.ready()){
-
-					String line = buffReader.readLine();
-
-					System.out.println("Message Recieved!");
-					System.out.println("Line: " + line);
-
-					char operation = line.charAt(0);
-
-					String object = line.substring(1);
-
-					synchronized (object){
-
-						Object obj = doOperation(operation, object);
-
-						if (obj != null){
-							sendObjectToClient(obj);
-						}
-					}
-
-				}
-			} catch (NumberFormatException | IOException e) {
-				e.printStackTrace();
-			}
-
-		}
+		
 	}
 
 	private void sendObjectToClient(Object obj) {
@@ -114,6 +105,16 @@ public class ClientCommunicator extends Thread{
 			String ids = crud.getIds();
 
 			o = ids;
+		}
+		else if (operation == 'l'){
+
+			if (object.charAt(0) == 'u'){
+				crud.unlock();
+			}
+			else {
+				o = crud.lock(id);
+			}
+
 		}
 
 		return o;

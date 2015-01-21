@@ -12,7 +12,7 @@ public interface ICRUD {
 	
 	public String getIds();
 	
-	public void lock();
+	public boolean lock(String id);
 	
 	public void unlock();
 }

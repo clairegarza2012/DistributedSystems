@@ -5,10 +5,13 @@ public class ServerCRUD implements ICRUD{
 	private Store store;
 	private IdGenerator idGenerator;
 	
+	private String lock;
+	
 	public ServerCRUD(){
 		
 		store = Store.getInstance();
 		idGenerator = IdGenerator.getInstance();
+		lock = "";
 	}
 	
 	@Override
@@ -56,15 +59,20 @@ public class ServerCRUD implements ICRUD{
 	}
 
 	@Override
-	public void lock() {
-		// TODO Auto-generated method stub
+	public boolean lock(String id) {
 		
+		if (lock == ""){
+			lock = id;
+			return true;
+		}
+		
+		return false;
 	}
 
 	@Override
 	public void unlock() {
-		// TODO Auto-generated method stub
 		
+		lock = "";
 	}
 
 }

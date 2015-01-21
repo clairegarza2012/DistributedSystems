@@ -3,11 +3,13 @@ package edu.neumont.csc380;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.LinkedList;
 
 public class Server{
 
 	private ServerSocket serverSocket;
-
+	private LinkedList<Socket> queue;
+	
 	public static void main(String[] args){
 
 		try {
@@ -21,14 +23,13 @@ public class Server{
 
 		serverSocket = new ServerSocket(2222); // 2222 is the port
 
+		queue = new LinkedList<Socket>();
+		
 		System.out.println("Server Created");
 
 		ClientListener listener = new ClientListener();
 
 		listener.start();
-
-		//ss.close();
-		//serverSocket.close();
 	}
 
 	private class ClientListener extends Thread{
@@ -36,20 +37,24 @@ public class Server{
 		public void run(){
 
 			while (true){
+				
 				try {
 					Socket clientSocket = serverSocket.accept();
-
+					
+					queue.add(clientSocket);
+					
 					System.out.println("client accepted!");
 
 					ClientCommunicator thread = new ClientCommunicator(clientSocket);
 
-					thread.start();
-
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+			
 			}
+		
 		}	
+	
 	}
 
 }
