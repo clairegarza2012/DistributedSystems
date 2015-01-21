@@ -1,0 +1,16 @@
+package edu.neumont.csc380;
+
+public interface ICRUD {
+
+	public boolean create();
+	
+	public Object read();
+	
+	public void update();
+	
+	public void delete();
+	
+	public void lock();
+	
+	public void unlock();
+}

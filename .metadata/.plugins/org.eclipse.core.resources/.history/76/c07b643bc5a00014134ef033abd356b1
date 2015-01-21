@@ -1,0 +1,132 @@
+package edu.neumont.csc380;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.net.UnknownHostException;
+import java.util.ArrayList;
+
+import javax.swing.Timer;
+
+public class Client {
+
+	private Protocol protocol;
+
+	private Timer timer;
+	private MyTimer myTimer;
+
+	private ArrayList<String> ids;
+	private ClientCRUD crud;
+	
+	public static void main(String[] args){
+
+		try {
+			new Client();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Client() throws IOException{
+
+		initializeVariablesAndStartTimer();
+
+		createObjects();
+
+		getObjectIds();
+
+		System.out.println("Number Of Id's: " + ids.size());
+
+		readObjects();
+
+		readObjects();
+
+		stopTimer();
+	}
+
+	private void initializeVariablesAndStartTimer() throws IOException {
+
+		ids = new ArrayList<String>();
+		protocol = new Protocol();
+		crud = new ClientCRUD();
+		
+		myTimer = new MyTimer();
+		timer = new Timer(1000, myTimer);
+		timer.start();		
+	}
+
+	private void createObjects() {
+
+		boolean serverFull = false;
+
+		while (!serverFull) {
+
+			String obj = ObjectGenerator.generate();
+
+			System.out.println("Object Created!" + " \n" + obj);
+
+			String objectId = obj.substring(0, 17);
+			
+			HallaStorObject object = protocol.deprotocolObject(obj);
+			
+			serverFull = crud.create(objectId, object);
+		}
+
+	}
+
+	private void getObjectIds() throws IOException {
+
+		String ids = crud.getIds();
+		
+		getIds(ids);
+	}
+
+	private void getIds(String line) {
+
+		System.out.println("Getting Ids");
+
+		int lineBreak = 17;
+		int placeInLine = 0;
+
+		System.out.println("Line Length: " + line.length());
+
+		while (placeInLine < (line.length() - 1)){
+
+			String id = line.substring(placeInLine, placeInLine + lineBreak);
+			System.out.println("Id: " + id);
+			ids.add(id);
+			placeInLine += lineBreak;
+		}		
+
+	}
+
+	private void readObjects() throws IOException {
+
+		for (int index = 0; index < ids.size(); index++) {
+
+			synchronized (ids.get(index)){
+
+				HallaStorObject obj = (HallaStorObject) crud.read(ids.get(index));
+
+				obj.update();
+				
+				crud.update(ids.get(index), obj);
+			}
+		}
+
+	}
+
+	private void stopTimer() throws IOException {
+
+		timer.stop();
+		System.out.println("Time: "  + myTimer.getTime());	
+	}
+
+
+}
+

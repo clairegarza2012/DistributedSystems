@@ -1,0 +1,238 @@
+package edu.neumont.csc380;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.Socket;
+import java.util.ArrayList;
+
+import javax.swing.Timer;
+
+public class Client implements ICRUD{
+
+	private Protocol protocol;
+
+	private Timer timer;
+	private MyTimer myTimer;
+
+	private ArrayList<String> ids;
+
+	public static void main(String[] args){
+
+		try {
+			new Client();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Client() throws IOException{
+
+		initializeVariablesAndStartTimer();
+
+		// make objects
+		createObjects();
+
+		// get ids
+		getObjectIds();
+
+		System.out.println("Number Of Id's: " + ids.size());
+
+		// read objects
+		readObjects();
+
+		// update objects
+		// updating the objects is in the read function
+
+		// read objects
+		readObjects();
+
+		stopTimer();
+	}
+
+	private void initializeVariablesAndStartTimer() throws IOException {
+
+		ids = new ArrayList<String>();
+		protocol = new Protocol();
+
+		myTimer = new MyTimer();
+		timer = new Timer(1000, myTimer);
+		timer.start();		
+	}
+
+	private void createObjects() throws IOException {
+
+		Socket clientSocket = new Socket("localhost", 2222);
+
+		System.out.println("Client Socket Created!");
+
+		InputStream is = clientSocket.getInputStream();
+		BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
+
+		OutputStream os = clientSocket.getOutputStream();
+		PrintStream ps = new PrintStream(os, true);
+
+		boolean serverFull = false;
+		
+		while (!serverFull) {
+
+			String obj = ObjectGenerator.generate();
+
+			System.out.println("Object Created!" + " \n" + obj);
+
+			ps.println("c" + obj);
+
+			String objectSucessfullyCreated = buffReader.readLine();
+
+			serverFull = ( objectSucessfullyCreated.equals("true") ) ? false : true;
+
+			System.out.println("Server Full: " + serverFull);
+		}
+
+		buffReader.close();
+		ps.close();
+		is.close();
+		os.close();
+
+		clientSocket.close();
+	}
+
+	private void getObjectIds() throws IOException {
+
+		Socket clientSocket = new Socket("localhost", 2222);
+
+		System.out.println("Client Socket Created!");
+
+		InputStream is = clientSocket.getInputStream();
+		BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
+
+		OutputStream os = clientSocket.getOutputStream();
+		PrintStream ps = new PrintStream(os, true);
+
+		ps.println("gg" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
+
+		String serverMessage = buffReader.readLine();
+
+		System.out.println("All Ids");
+
+		getIds(serverMessage);
+
+		buffReader.close();
+		ps.close();
+		is.close();
+		os.close();
+
+		clientSocket.close();
+	}
+
+	private void getIds(String line) {
+
+		System.out.println("Getting Ids");
+
+		int lineBreak = 17;
+		int placeInLine = 0;
+
+		System.out.println("Line Length: " + line.length());
+
+		while (placeInLine < (line.length() - 1)){
+
+			String id = line.substring(placeInLine, placeInLine + lineBreak);
+			System.out.println("Id: " + id);
+			ids.add(id);
+			placeInLine += lineBreak;
+		}		
+
+	}
+
+	private void readObjects() throws IOException {
+
+		Socket clientSocket = new Socket("localhost", 2222);
+
+		System.out.println("Client Socket Created!");
+
+		InputStream is = clientSocket.getInputStream();
+		BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
+
+		OutputStream os = clientSocket.getOutputStream();
+		PrintStream ps = new PrintStream(os, true);
+
+		for (int index = 0; index < ids.size(); index++) {
+
+			synchronized (ids.get(index)){
+
+				ps.println("r" + ids.get(index));
+
+				String serverMessage = buffReader.readLine();
+
+				HallaStorObject oDeprotocol = protocol.deprotocolObject(serverMessage);
+
+				oDeprotocol.update();
+
+				String oProtocol = protocol.protocolObject(oDeprotocol);
+
+				ps.println("u" + oProtocol);
+			}
+		}
+
+		buffReader.close();
+		ps.close();
+		is.close();
+		os.close();
+
+		clientSocket.close();
+	}
+
+	private void stopTimer() throws IOException {
+
+		timer.stop();
+		System.out.println("Time: "  + myTimer.getTime());	
+	}
+
+	@Override
+	public boolean create(String id, Object obj) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public Object read(String id) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void update(String id, Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(String id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getIds() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void lock() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void unlock() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}
+

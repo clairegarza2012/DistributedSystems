@@ -4,14 +4,10 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server {
+public class Server{
 
-	private static Store store;
-		
 	private ServerSocket serverSocket;
-	
-	private Server server;
-	
+
 	public static void main(String[] args){
 
 		try {
@@ -27,10 +23,6 @@ public class Server {
 
 		System.out.println("Server Created");
 
-		store = Store.getInstance();
-		
-		server = this;
-		
 		ClientListener listener = new ClientListener();
 
 		listener.start();
@@ -49,7 +41,7 @@ public class Server {
 
 					System.out.println("client accepted!");
 
-					ClientCommunicator thread = new ClientCommunicator(clientSocket, server);
+					ClientCommunicator thread = new ClientCommunicator(clientSocket);
 
 					thread.start();
 
@@ -57,30 +49,7 @@ public class Server {
 					e.printStackTrace();
 				}
 			}
-		}
-	}
-	
-	public boolean create(String id, Object obj){
-	
-		return store.addObject(id, obj);
+		}	
 	}
 
-	public Object read(String id){
-
-		return store.getObject(id);
-	}
-
-	public void update(String id, Object obj){
-
-		store.updateObject(id, obj);
-	}
-
-	public void delete(String id){
-
-		store.deleteObject(id);
-	}
-	
-	public String getIds(){
-		return store.getIds();
-	}
 }

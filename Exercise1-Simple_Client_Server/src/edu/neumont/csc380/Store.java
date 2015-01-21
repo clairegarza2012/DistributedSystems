@@ -37,17 +37,18 @@ public class Store {
 		for (int i = 0; i < ids.size(); i++){
 			string += ids.get(i);
 		}
-
+		System.out.println("From Store: " + string);
 		return string;
 	}
 
 	public boolean addObject(String key, Object value){
 
 		try {
-			store.add(key, value);	
-			
 			ids.add(key);
+
+			store.add(key, value);	
 		} catch (IllegalStateException e) {
+			ids.remove(key);
 			return false;
 		}
 		return true;

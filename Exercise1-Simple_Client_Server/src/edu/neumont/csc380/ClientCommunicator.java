@@ -11,19 +11,17 @@ import java.net.Socket;
 public class ClientCommunicator extends Thread{
 
 	private Protocol protocol;
-	private Server server;
 
 	private PrintStream ps;
 	private BufferedReader buffReader;
 
-	private IdGenerator idGenerator;
+	private ServerCRUD crud;
 
-	public ClientCommunicator(Socket socket, Server server){
+	public ClientCommunicator(Socket socket){
 
 		protocol = new Protocol();
-		idGenerator = IdGenerator.getInstance();
 
-		this.server = server;
+		crud = new ServerCRUD();
 
 		try {
 			OutputStream out = socket.getOutputStream();
@@ -47,7 +45,7 @@ public class ClientCommunicator extends Thread{
 				while (buffReader.ready()){
 
 					String line = buffReader.readLine();
-					
+
 					System.out.println("Message Recieved!");
 					System.out.println("Line: " + line);
 
@@ -55,17 +53,15 @@ public class ClientCommunicator extends Thread{
 
 					String object = line.substring(1);
 
-					synchronized (object) {
+					synchronized (object){
 
-						System.out.println("Object: " + object);
-
-						Object obj = doOperation(operation, object, protocol);
+						Object obj = doOperation(operation, object);
 
 						if (obj != null){
 							sendObjectToClient(obj);
 						}
-					
 					}
+
 				}
 			} catch (NumberFormatException | IOException e) {
 				e.printStackTrace();
@@ -79,18 +75,18 @@ public class ClientCommunicator extends Thread{
 		char objProposition = obj.toString().charAt(0);
 
 		if (objProposition == 'R' || objProposition == 'D'){
-			
+
 			ps.println(protocol.protocolObject((HallaStorObject) obj));
 		}
 		else {
-		
+
 			ps.println(obj);
 		}
-		
+
 		System.out.println("Sent message to Client: " + obj.toString());
 	}
 
-	private Object doOperation(char operation, String object, Protocol protocol) {
+	private Object doOperation(char operation, String object) {
 
 		Object o = null;
 		String id = object.substring(0, 17);
@@ -100,36 +96,23 @@ public class ClientCommunicator extends Thread{
 			HallaStorObject obj = protocol.deprotocolObject(object);
 
 			if (operation == 'u'){
-				
-				server.update(id, obj); 
+
+				crud.update(id, obj); 
 			}
 			else{
-				
-				String binaryId = id;
-				
-				if (Integer.parseInt(id, 2) == 0) { // makes sure that the object doesn't already have an id.. then will create one
-					
-					idGenerator.incrementId();
-	
-					int idNum = idGenerator.getId();
-	
-					obj.setId(idNum);
-	
-					binaryId = String.format("%16s", Integer.toBinaryString(idNum)).replace(" ", "0");
-				}
-				
-				o = server.create("" + object.charAt(0) + binaryId, obj); 
+
+				o = crud.create(id, obj); 
 			}
 		}
 		else if (operation == 'r'){
-			o = server.read(id);
+			o = crud.read(id);
 		}
 		else if (operation == 'd'){
-			server.delete(id);
+			crud.delete(id);
 		}
 		else  if (operation == 'g'){
-			String ids = server.getIds();
-			System.out.println(ids);
+			String ids = crud.getIds();
+
 			o = ids;
 		}
 

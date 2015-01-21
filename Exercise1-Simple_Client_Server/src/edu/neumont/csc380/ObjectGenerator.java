@@ -6,15 +6,13 @@ public class ObjectGenerator {
 
 	private static Random ran = new Random();
 	
-	public static String generate(){
+	public static HallaStorObject generate(){
 		
-		String obj = null;
+		HallaStorObject obj = null;
 		
 		int i = ran.nextInt(2);
-		
-		Protocol protocol = new Protocol();
-		
-		obj = (i == 0) ? protocol.protocolObject(makeRacecar()) : protocol.protocolObject(makeDriver());
+				
+		obj = (i == 0) ? makeRacecar() : makeDriver();
 		
 		return obj;
 	}

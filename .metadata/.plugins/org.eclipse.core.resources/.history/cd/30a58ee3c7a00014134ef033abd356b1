@@ -1,0 +1,213 @@
+package edu.neumont.csc380;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+public class Server implements ICRUD{
+
+	private static Store store;
+
+	private ServerSocket serverSocket;
+
+	//private Server server;
+	
+	private Protocol protocol;
+
+	public static void main(String[] args){
+
+		try {
+			new Server();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public Server() throws IOException{
+
+		serverSocket = new ServerSocket(2222); // 2222 is the port
+
+		System.out.println("Server Created");
+
+		store = Store.getInstance();
+
+		protocol = new Protocol();
+		
+		//server = this;
+
+		ClientListener listener = new ClientListener();
+
+		listener.start();
+
+		//ss.close();
+		//serverSocket.close();
+	}
+
+	private class ClientListener extends Thread{
+
+		public void run(){
+
+			while (true){
+				try {
+					Socket clientSocket = serverSocket.accept();
+
+					System.out.println("client accepted!");
+
+					whatDoesTheClientWant(clientSocket);
+					
+					//					ClientCommunicator thread = new ClientCommunicator(clientSocket, server);
+					//
+					//					thread.start();
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+
+		private void whatDoesTheClientWant(Socket clientSocket) {
+			
+			InputStream is = clientSocket.getInputStream();
+			BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
+
+			OutputStream os = clientSocket.getOutputStream();
+			PrintStream ps = new PrintStream(os, true);
+			
+			String line = buffReader.readLine();
+
+			System.out.println("Message Recieved!");
+			System.out.println("Line: " + line);
+
+			char operation = line.charAt(0);
+
+			String object = line.substring(1);
+
+			synchronized (object) {
+
+				System.out.println("Object: " + object);
+
+				Object obj = doOperation(operation, object);
+
+				if (obj != null){
+					sendObjectToClient(obj);
+				}
+
+			}
+			
+			buffReader.close();
+			ps.close();
+			is.close();
+			os.close();
+
+		}
+		
+		private Object doOperation(char operation, String object) {
+
+			Object o = null;
+			String id = object.substring(0, 17);
+
+			if (operation == 'u' || operation == 'c'){
+
+				HallaStorObject obj = protocol.deprotocolObject(object);
+
+				if (operation == 'u'){
+					
+					server.update(id, obj); 
+				}
+				else{
+					
+					String binaryId = id;
+					
+					if (Integer.parseInt(id.substring(1), 2) == 0) { // makes sure that the object doesn't already have an id.. then will create one
+						
+						idGenerator.incrementId();
+		
+						int idNum = idGenerator.getId();
+		
+						obj.setId(idNum);
+		
+						binaryId = String.format("%16s", Integer.toBinaryString(idNum)).replace(" ", "0");
+					}
+					
+					o = server.create("" + object.charAt(0) + binaryId, obj); 
+				}
+			}
+			else if (operation == 'r'){
+				o = server.read(id);
+			}
+			else if (operation == 'd'){
+				server.delete(id);
+			}
+			else  if (operation == 'g'){
+				String ids = server.getIds();
+				System.out.println(ids);
+				o = ids;
+			}
+
+			return o;
+		}
+		
+		private void sendObjectToClient(Object obj) {
+
+			char objProposition = obj.toString().charAt(0);
+
+			if (objProposition == 'R' || objProposition == 'D'){
+				
+				ps.println(protocol.protocolObject((HallaStorObject) obj));
+			}
+			else {
+			
+				ps.println(obj);
+			}
+			
+			System.out.println("Sent message to Client: " + obj.toString());
+		}
+	
+	}
+
+	@Override
+	public boolean create(String id, Object obj){
+
+		return store.addObject(id, obj);
+	}
+
+	@Override
+	public Object read(String id){
+
+		return store.getObject(id);
+	}
+
+	@Override
+	public void update(String id, Object obj){
+
+		store.updateObject(id, obj);
+	}
+
+	@Override
+	public void delete(String id){
+
+		store.deleteObject(id);
+	}
+
+	@Override
+	public String getIds(){
+		return store.getIds();
+	}
+
+	@Override
+	public void lock() {
+		// TODO Auto-generated method stub
+
+	}
+
+	@Override
+	public void unlock() {
+		// TODO Auto-generated method stub
+
+	}
+}

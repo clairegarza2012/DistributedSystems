@@ -1,0 +1,139 @@
+package edu.neumont.csc380;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.Socket;
+
+public class ClientCommunicator extends Thread{
+
+	private Protocol protocol;
+	private Server server;
+
+	private PrintStream ps;
+	private BufferedReader buffReader;
+
+	private IdGenerator idGenerator;
+
+	public ClientCommunicator(Socket socket, Server server){
+
+		protocol = new Protocol();
+		idGenerator = IdGenerator.getInstance();
+
+		this.server = server;
+
+		try {
+			OutputStream out = socket.getOutputStream();
+
+			ps = new PrintStream(out, true);
+
+			InputStream is = socket.getInputStream();
+
+			buffReader = new BufferedReader(new InputStreamReader(is));
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void run(){
+
+		while (true){
+
+			try {
+				while (buffReader.ready()){
+
+					String line = buffReader.readLine();
+					
+					System.out.println("Message Recieved!");
+					System.out.println("Line: " + line);
+
+					char operation = line.charAt(0);
+
+					String object = line.substring(1);
+
+					synchronized (object) {
+
+						System.out.println("Object: " + object);
+
+						Object obj = doOperation(operation, object, protocol);
+
+						if (obj != null){
+							sendObjectToClient(obj);
+						}
+					
+					}
+				}
+			} catch (NumberFormatException | IOException e) {
+				e.printStackTrace();
+			}
+
+		}
+	}
+
+	private void sendObjectToClient(Object obj) {
+
+		char objProposition = obj.toString().charAt(0);
+
+		if (objProposition == 'R' || objProposition == 'D'){
+			
+			ps.println(protocol.protocolObject((HallaStorObject) obj));
+		}
+		else {
+		
+			ps.println(obj);
+		}
+		
+		System.out.println("Sent message to Client: " + obj.toString());
+	}
+
+	private Object doOperation(char operation, String object, Protocol protocol) {
+
+		Object o = null;
+		String id = object.substring(0, 17);
+
+		if (operation == 'u' || operation == 'c'){
+
+			HallaStorObject obj = protocol.deprotocolObject(object);
+
+			if (operation == 'u'){
+				
+				server.update(id, obj); 
+			}
+			else{
+				
+				String binaryId = id;
+				
+				if (Integer.parseInt(id.substring(1), 2) == 0) { // makes sure that the object doesn't already have an id.. then will create one
+					
+					idGenerator.incrementId();
+	
+					int idNum = idGenerator.getId();
+	
+					obj.setId(idNum);
+	
+					binaryId = String.format("%16s", Integer.toBinaryString(idNum)).replace(" ", "0");
+				}
+				
+				o = server.create("" + object.charAt(0) + binaryId, obj); 
+			}
+		}
+		else if (operation == 'r'){
+			o = server.read(id);
+		}
+		else if (operation == 'd'){
+			server.delete(id);
+		}
+		else  if (operation == 'g'){
+			String ids = server.getIds();
+			System.out.println(ids);
+			o = ids;
+		}
+
+		return o;
+	}
+
+}

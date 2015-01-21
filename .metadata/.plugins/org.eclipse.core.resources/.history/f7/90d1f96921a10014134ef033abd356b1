@@ -1,0 +1,54 @@
+package edu.neumont.csc380;
+
+public class ServerCRUD implements ICRUD{
+
+	private static Store store;
+	
+	public ServerCRUD(){
+		
+		store = Store.getInstance();
+	}
+	
+	@Override
+	public boolean create(String id, Object obj) {
+
+		return store.addObject(id, obj);
+	}
+
+	@Override
+	public Object read(String id) {
+
+		return store.getObject(id);
+	}
+
+	@Override
+	public void update(String id, Object obj) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void delete(String id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public String getIds() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void lock() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void unlock() {
+		// TODO Auto-generated method stub
+		
+	}
+
+}

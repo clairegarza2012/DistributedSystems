@@ -1,0 +1,12 @@
+package edu.neumont.csc380;
+
+public enum ECRUD {
+
+	CREATE,
+	UPDATE,
+	DELETE,
+	READ,
+	GET_IDS,
+	LOCK,
+	UNLOCK
+}
