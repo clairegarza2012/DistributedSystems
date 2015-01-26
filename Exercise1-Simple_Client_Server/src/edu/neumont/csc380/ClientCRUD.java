@@ -9,6 +9,8 @@ import java.net.Socket;
 
 public class ClientCRUD implements ICRUD{
 
+	private final int port = 2222;
+	
 	private Protocol protocol;
 
 	public ClientCRUD(){
@@ -23,7 +25,7 @@ public class ClientCRUD implements ICRUD{
 
 		try {
 
-			Socket clientSocket = new Socket("localhost", 2222);
+			Socket clientSocket = new Socket("localhost", port);
 
 			System.out.println("Create Requested!");
 
@@ -65,7 +67,7 @@ public class ClientCRUD implements ICRUD{
 
 		try {
 
-			Socket clientSocket = new Socket("localhost", 2222);
+			Socket clientSocket = new Socket("localhost", port);
 
 			System.out.println("Read Requested!");
 
@@ -100,7 +102,7 @@ public class ClientCRUD implements ICRUD{
 
 		try {
 
-			Socket clientSocket = new Socket("localhost", 2222);
+			Socket clientSocket = new Socket("localhost", port);
 
 			System.out.println("Update Requested!");
 
@@ -126,7 +128,7 @@ public class ClientCRUD implements ICRUD{
 
 		try {
 
-			Socket clientSocket = new Socket("localhost", 2222);
+			Socket clientSocket = new Socket("localhost", port);
 
 			System.out.println("Delete Requested!");
 
@@ -152,7 +154,7 @@ public class ClientCRUD implements ICRUD{
 		String ids = "";
 
 		try {
-			Socket clientSocket = new Socket("localhost", 2222);
+			Socket clientSocket = new Socket("localhost", port);
 
 			System.out.println("Get All Ids Requested!");
 
@@ -190,7 +192,7 @@ public class ClientCRUD implements ICRUD{
 		boolean lockAccepted = false;
 
 		try {
-			Socket clientSocket = new Socket("localhost", 2222);
+			Socket clientSocket = new Socket("localhost", port);
 
 			System.out.println("Lock Requested!");
 
@@ -221,10 +223,10 @@ public class ClientCRUD implements ICRUD{
 	}
 
 	@Override
-	public void unlock() {
+	public void unlock(String id) {
 
 		try {
-			Socket clientSocket = new Socket("localhost", 2222);
+			Socket clientSocket = new Socket("localhost", port);
 
 			System.out.println("Unlock Requested!");
 
@@ -234,7 +236,7 @@ public class ClientCRUD implements ICRUD{
 			OutputStream os = clientSocket.getOutputStream();
 			PrintStream ps = new PrintStream(os, true);
 
-				ps.println("lu" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
+				ps.println("a" + id);
 
 			buffReader.close();
 			ps.close();

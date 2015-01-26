@@ -14,5 +14,5 @@ public interface ICRUD {
 	
 	public boolean lock(String id);
 	
-	public void unlock();
+	public void unlock(String id);
 }

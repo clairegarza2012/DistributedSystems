@@ -5,7 +5,7 @@ import java.util.ArrayList;
 public class Client {
 
 	private ArrayList<String> ids;
-	private ClientCRUD crud;
+	private ICRUD crud;
 
 	private long startTime;
 
@@ -26,9 +26,11 @@ public class Client {
 
 		readAndUpdateObjects();
 
+		Thread.yield();
+
 		readObjects();
 
-		stopTimerAndPrintTime();
+		getTime();
 	}
 
 	private void initializeVariablesAndStartTimer() {
@@ -88,19 +90,29 @@ public class Client {
 
 		while (index < ids.size()) {
 
-			if (crud.lock(ids.get(index))) {
-
-				HallaStorObject obj = (HallaStorObject) crud.read(ids.get(index));
+			synchronized (ids.get(index)) {
 				
-				System.out.println("Read and Update: " + obj.toString());
-				
-				obj.update();
+				if (crud.lock(ids.get(index))) {
 
-				crud.update(ids.get(index), obj);
+					HallaStorObject obj = (HallaStorObject) crud.read(ids.get(index));
 
-				crud.unlock();
+					System.out.println("Read and Update: " + obj.toString());
 
-				index++;
+					obj.update();
+
+					crud.update(ids.get(index), obj);
+
+					crud.unlock(ids.get(index));
+
+					index++;
+				}
+				else {
+					try {
+						Thread.sleep(10);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 	}
@@ -116,8 +128,8 @@ public class Client {
 				HallaStorObject obj = (HallaStorObject) crud.read(ids.get(index));
 
 				System.out.println("Read: " + obj.toString());
-				
-				crud.unlock();
+
+				crud.unlock(ids.get(index));
 
 				index++;
 			}
@@ -125,7 +137,7 @@ public class Client {
 
 	}
 
-	private void stopTimerAndPrintTime() {
+	private void getTime() {
 
 		long endTime = System.currentTimeMillis();
 

@@ -1,0 +1,19 @@
+package edu.neumont.csc380;
+
+public class Locks {
+
+	private static Locks lock = null;
+	
+	private Locks(){
+		
+	}
+	
+	public static Locks getInstance(){
+		
+		if (lock == null){
+			
+		}
+		
+	}
+	
+}

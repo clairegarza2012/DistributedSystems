@@ -1,0 +1,45 @@
+package edu.neumont.csc380;
+
+import java.util.HashSet;
+
+public class Locks {
+
+	private static Locks lock = null;
+	
+	private static HashSet<String> locks;
+	
+	private Locks(){
+		locks = new HashSet<String>();
+	}
+	
+	public static Locks getInstance(){
+		
+		if (lock == null){
+			synchronized (lock.getClass()){
+				if (lock == null){
+					lock = new Locks();
+				}
+			}	
+		}
+		
+		return lock;
+	}
+
+	public boolean addLock(String lock){
+		return locks.add(lock);
+	}
+	
+	public boolean containsLock(String lock){
+		return locks.contains(lock);
+	}
+	
+	public boolean removeLock(String lock){
+		return locks.remove(lock);
+	}
+	
+	public int size(){
+		return locks.size();
+	}
+	
+}
+

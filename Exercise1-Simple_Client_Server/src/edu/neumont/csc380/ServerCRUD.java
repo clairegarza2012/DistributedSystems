@@ -1,17 +1,16 @@
 package edu.neumont.csc380;
 
 public class ServerCRUD implements ICRUD{
-
+	
 	private Store store;
 	private IdGenerator idGenerator;
-	
-	private String lock;
+	private Locks locks;
 	
 	public ServerCRUD(){
 		
 		store = Store.getInstance();
 		idGenerator = IdGenerator.getInstance();
-		lock = "";
+		locks = Locks.getInstance();
 	}
 	
 	@Override
@@ -60,19 +59,16 @@ public class ServerCRUD implements ICRUD{
 
 	@Override
 	public boolean lock(String id) {
+					
+		boolean lockAdded = locks.addLock(id);
 		
-		if (lock == ""){
-			lock = id;
-			return true;
-		}
-		
-		return false;
+		return lockAdded;
 	}
 
 	@Override
-	public void unlock() {
+	public void unlock(String id) {
 		
-		lock = "";
+		locks.removeLock(id);
 	}
 
 }

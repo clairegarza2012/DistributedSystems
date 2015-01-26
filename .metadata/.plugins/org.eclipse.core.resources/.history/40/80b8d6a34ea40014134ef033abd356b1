@@ -1,0 +1,122 @@
+package edu.neumont.csc380;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.Socket;
+
+public class ClientCommunicator {
+
+	private Protocol protocol;
+
+	private PrintStream ps;
+
+	private 
+	
+	public ClientCommunicator(Socket socket, ICRUD crud){
+
+		protocol = new Protocol();
+
+		crud = new ServerCRUD();
+
+		try {
+			OutputStream os = socket.getOutputStream();
+			InputStream is = socket.getInputStream();
+
+			ps = new PrintStream(os, true);
+			BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
+
+			while (!buffReader.ready()){
+			}
+
+			String line = buffReader.readLine();
+
+			System.out.println("Message Recieved!");
+			System.out.println("Line: " + line);
+
+			char operation = line.charAt(0);
+
+			String object = line.substring(1);
+			
+			synchronized (object) {
+			
+				Object obj = doOperation(operation, object);
+				
+				if (obj != null){
+					sendObjectToClient(obj);
+				}
+			}
+			
+			buffReader.close();
+			is.close();
+
+			ps.close();
+			os.close();
+
+			socket.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private void sendObjectToClient(Object obj) {
+
+		char objProposition = obj.toString().charAt(0);
+
+		if (objProposition == 'R' || objProposition == 'D'){
+
+			ps.println(protocol.protocolObject((HallaStorObject) obj));
+		}
+		else {
+
+			ps.println(obj);
+		}
+
+		System.out.println("Sent message to Client: " + obj.toString());
+	}
+
+	private Object doOperation(char operation, String object) {
+
+		Object o = null;
+		String id = object.substring(0, 17);
+
+		if (operation == 'u' || operation == 'c'){
+
+			HallaStorObject obj = protocol.deprotocolObject(object);
+
+			if (operation == 'u'){
+
+				crud.update(id, obj); 
+			}
+			else{
+
+				o = crud.create(id, obj); 
+			}
+		}
+		else if (operation == 'r'){
+			o = crud.read(id);
+		}
+		else if (operation == 'd'){
+			crud.delete(id);
+		}
+		else  if (operation == 'g'){
+			String ids = crud.getIds();
+
+			o = ids;
+		}
+		else if (operation == 'l'){
+			o = crud.lock(id);
+		}
+		else if (operation == 'a'){
+			crud.unlock(id);
+		}
+
+		return o;
+	}
+
+}
