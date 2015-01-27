@@ -7,6 +7,10 @@ public class Driver implements HallaStorObject{
 	private boolean isMale;
 	private int id;
 	
+	public Driver(){
+		
+	}
+	
 	public Driver(String name, int age, boolean isMale){
 		
 		this.name = name;
@@ -69,5 +73,11 @@ public class Driver implements HallaStorObject{
 		return "Driver [id= " + id + ", name=" + name + ", age=" + age + ", isMale=" + isMale
 				+ "]";
 	}
+
+//	@Override
+//	public Object createInstance(Type type) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 
 }

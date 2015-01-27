@@ -48,6 +48,7 @@ public class Store {
 
 			store.add(key, value);	
 		} catch (IllegalStateException e) {
+			System.out.println("Adding an Object to Store Failed!!: " + " key:" + key + " value: " + value);
 			ids.remove(key);
 			return false;
 		}

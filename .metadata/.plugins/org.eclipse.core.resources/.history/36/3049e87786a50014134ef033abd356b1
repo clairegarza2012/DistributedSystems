@@ -1,0 +1,11 @@
+package edu.neumont.csc380;
+
+public interface HallaStorObject /*implements InstanceCreator<Object>*/{
+
+	public abstract int getId();
+	
+	public abstract void update();
+	
+	public abstract void setId(int id);
+
+}

@@ -9,17 +9,17 @@ import java.io.PrintStream;
 import java.net.Socket;
 
 public class ClientCommunicator {
-	
+
 	private Protocol protocol;
 
 	private PrintStream ps;
 
 	private ICRUD crud;
-	
+
 	public ClientCommunicator(Socket socket){
 
 		this.crud = new ServerCRUD();
-		
+
 		protocol = new Protocol();
 
 		crud = new ServerCRUD();
@@ -42,16 +42,16 @@ public class ClientCommunicator {
 			char operation = line.charAt(0);
 
 			String object = line.substring(1);
-			
+
 			synchronized (object) {
-			
+
 				Object obj = doOperation(operation, object);
-				
+
 				if (obj != null){
 					sendObjectToClient(obj);
 				}
 			}
-			
+
 			buffReader.close();
 			is.close();
 
@@ -85,37 +85,40 @@ public class ClientCommunicator {
 	private Object doOperation(char operation, String object) {
 
 		Object o = null;
-		String id = object.substring(0, 17);
 
-		if (operation == 'u' || operation == 'c'){
+		if (operation == 'g'){
 
-			HallaStorObject obj = protocol.deprotocolObject(object);
-
-			if (operation == 'u'){
-
-				crud.update(id, obj); 
-			}
-			else{
-
-				o = crud.create(id, obj); 
-			}
-		}
-		else if (operation == 'r'){
-			o = crud.read(id);
-		}
-		else if (operation == 'd'){
-			crud.delete(id);
-		}
-		else  if (operation == 'g'){
 			String ids = crud.getIds();
 
 			o = ids;
 		}
-		else if (operation == 'l'){
-			o = crud.lock(id);
+		else if (operation == 'u' || operation == 'c'){
+			HallaStorObject obj = protocol.deprotocolObject(object);
+			String id = "" + obj.getId();
+			
+			if (operation == 'u'){
+
+				crud.update(id, obj); 
+			}
+			else if (operation == 'c'){
+
+				o = crud.create(id, obj); 
+			}
 		}
-		else if (operation == 'a'){
-			crud.unlock(id);
+		else {
+			
+			if (operation == 'r'){
+				o = crud.read(object);
+			}
+			else if (operation == 'd'){
+				crud.delete(object);
+			}
+			else if (operation == 'l'){
+				o = crud.lock(object);
+			}
+			else if (operation == 'a'){
+				crud.unlock(object);
+			}
 		}
 
 		return o;

@@ -16,21 +16,19 @@ public class ServerCRUD implements ICRUD{
 	@Override
 	public boolean create(String id, Object obj) {
 
-		String binaryId = id.substring(1);
-
-		if (Integer.parseInt(id.substring(1), 2) == 0) { // makes sure that the object doesn't already have an id.. then creates one
+		if (id.equals("0")) { // makes sure that the object doesn't already have an id.. then creates one
 
 			idGenerator.incrementId();
 
 			int idNum = idGenerator.getId();
-
+			
 			HallaStorObject object = (HallaStorObject) obj; 
 			object.setId(idNum);
-
-			binaryId = String.format("%16s", Integer.toBinaryString(idNum)).replace(" ", "0");
+			
+			id = "" + idNum;
 		}
 		
-		return store.addObject("" +  id.charAt(0) + "" + binaryId, obj);
+		return store.addObject(id, obj);
 	}
 
 	@Override

@@ -164,7 +164,7 @@ public class ClientCRUD implements ICRUD{
 			OutputStream os = clientSocket.getOutputStream();
 			PrintStream ps = new PrintStream(os, true);
 
-				ps.println("gg" + String.format("%16s", Integer.toBinaryString(1)).replace(" ", "0"));
+				ps.println("gg");
 	
 				String serverMessage = buffReader.readLine();
 	

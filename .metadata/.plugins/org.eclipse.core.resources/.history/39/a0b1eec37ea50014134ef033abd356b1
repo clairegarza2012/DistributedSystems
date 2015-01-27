@@ -1,0 +1,11 @@
+package edu.neumont.csc380;
+
+import com.google.gson.InstanceCreator;
+
+public interface HallaStorObject extends InstanceCreator<Object>{
+
+	public void update();
+	
+	public void setId(int id);
+
+}

@@ -49,7 +49,7 @@ public class Client {
 
 			HallaStorObject obj = ObjectGenerator.generate();
 
-			System.out.println(obj.toString());
+			System.out.println(obj);
 
 			serverFull = crud.create("", obj);
 		}
@@ -69,17 +69,22 @@ public class Client {
 
 		System.out.println("Getting Ids");
 
-		int lineBreak = 17;
+		int lineBreak = 1;
 		int placeInLine = 0;
 
 		System.out.println("Line Length: " + line.length());
 
 		while (placeInLine < (line.length() - 1)){
 
+			if (placeInLine + 1 == 10){
+				lineBreak ++;
+			}
+			
 			String id = line.substring(placeInLine, placeInLine + lineBreak);
 			System.out.println("Id: " + id);
 			ids.add(id);
 			placeInLine += lineBreak;
+			
 		}		
 
 	}

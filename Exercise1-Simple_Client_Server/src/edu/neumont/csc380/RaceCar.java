@@ -8,6 +8,10 @@ public class RaceCar implements HallaStorObject{
 	private double quarterMileTime;
 	private int id;
 	
+	public RaceCar(){
+		
+	}
+	
 	public RaceCar(String make, String model, int horsePower, double quarterMileTime){
 		
 		this.make = make;
@@ -81,5 +85,10 @@ public class RaceCar implements HallaStorObject{
 				+ horsePower + ", quarterMileTime=" + quarterMileTime + "]";
 	}
 
+//	@Override
+//	public Object createInstance(Type type) {
+//		// TODO Auto-generated method stub
+//		return null;
+//	}
 	
 }
