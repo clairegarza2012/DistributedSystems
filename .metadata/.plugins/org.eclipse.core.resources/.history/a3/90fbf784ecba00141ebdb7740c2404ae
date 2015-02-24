@@ -1,0 +1,73 @@
+package edu.neumont.csc230;
+
+public class StateMachine {
+
+	public States doStateThings(String s){
+
+		s = s.toUpperCase();
+
+		States state = States.Initial;
+
+		for (char c : s.toCharArray()){
+
+			state = nextState(state, c);
+		}
+
+		return state;
+	}
+
+	public String getResponse(States state){
+
+		String response = "Do not compute!";
+
+		if (state == States.AcceptAloha || state == States.Aloha) {
+			response = "Aloha";
+		}else if (state == States.AcceptHi || state == States.Hi) {
+			response = "Hey There!";
+		}else if (state == States.AcceptHello || state == States.Hello) {
+			response = "Sup";
+		}else if (state == States.AcceptHowdy || state == States.Howdy) {
+			response = "Howdy Partner!";
+		}else if (state == States.Thanks || state == States.AcceptThanks
+				|| state == States.you || state == States.AcceptYou) {
+			response = "oirhgoelokm";
+		}else {
+			response = "Do not compute!";
+		}
+
+		return response;
+	}
+
+	private States nextState(States state, char c) {
+
+		States newState = state;
+
+		switch (state){
+			case Initial:
+				if (c == 'H'){
+					newState = States.H;
+				}else if (c == 'h'){
+					newState = States.h;
+				}else if (c == 'A'){
+					newState = States.A;
+				}else if (c == 'a'){
+					newState = States.a;
+				}else if (c == 'T'){
+					newState = States.T;
+				}else if (c == 't'){
+					newState = States.t;
+				}else if (c == ' '){
+					newState = States.BeginWord;
+				}else {
+					newState = States.BadState;
+				}break;
+		}
+
+		return newState;
+	}
+
+	private boolean isPunctuation(char c){
+
+		return (c == '!') | (c == '.') | (c == '?');
+	}
+}

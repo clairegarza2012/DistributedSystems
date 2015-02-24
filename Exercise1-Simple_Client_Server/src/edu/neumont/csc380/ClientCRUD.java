@@ -7,10 +7,12 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
 
+import com.hallaLib.HallaZip;
+
 public class ClientCRUD implements ICRUD{
 
 	private final int port = 2222;
-	
+
 	private Protocol protocol;
 
 	public ClientCRUD(){
@@ -36,14 +38,52 @@ public class ClientCRUD implements ICRUD{
 			PrintStream ps = new PrintStream(os, true);
 
 				String object = protocol.protocolObject((HallaStorObject) obj);
+		
+				byte[] messageToServer = object.getBytes();
 	
-				ps.println("c" + object);
+				byte[] compressedMessageToServer = HallaZip.compress(messageToServer);
 	
-				String objectSucessfullyCreated = buffReader.readLine();
+				for (byte b : compressedMessageToServer){
+					byte i = (byte)b;
+					System.out.println(i);
+					ps.print(i);
+				}
+				
+				String compressed = compressedMessageToServer.toString();
+					
+				// then send string to server
+				
+				byte[] compressedBytes = new byte[100];
+				
+				for (int i = 0; i < compressed.length(); i++){					
+					compressedBytes[i] = (byte)compressed.charAt(i);
+				}
+						
+				byte[] decompressed = HallaZip.expand(compressedBytes);
 	
-				serverFull = !( objectSucessfullyCreated.equals("true") ) ;
 	
-				System.out.println("Server Full: " + serverFull);
+				String object2 = "";
+	
+				for (byte b : decompressed){					
+					object2 += (char)b;
+				}
+	
+				HallaStorObject object3 = protocol.deprotocolObject(object2);
+	
+	
+				//				ps.println('c');
+				//				
+				//				for (byte b : compressedMessageToServer){
+				//					ps.println(b);
+				//				}
+				//					
+				//				ps.flush();
+				//				
+				//				String objectSucessfullyCreated = buffReader.readLine();
+				//				
+				//				serverFull = !( objectSucessfullyCreated.equals("true") ) ;
+				//	
+				//				System.out.println("Server Full: " + serverFull);
 
 			buffReader.close();
 			ps.close();
@@ -77,11 +117,11 @@ public class ClientCRUD implements ICRUD{
 			OutputStream os = clientSocket.getOutputStream();
 			PrintStream ps = new PrintStream(os, true);
 
-				ps.println("r" + id);
-	
-				String serverMessage = buffReader.readLine();
-	
-				object = protocol.deprotocolObject(serverMessage);
+			ps.println("r" + id);
+
+			String serverMessage = buffReader.readLine();
+
+			object = protocol.deprotocolObject(serverMessage);
 
 			buffReader.close();
 			ps.close();
@@ -109,9 +149,9 @@ public class ClientCRUD implements ICRUD{
 			OutputStream os = clientSocket.getOutputStream();
 			PrintStream ps = new PrintStream(os, true);
 
-				String protocolObject = protocol.protocolObject((HallaStorObject) obj);
-	
-				ps.println("u" + protocolObject);
+			String protocolObject = protocol.protocolObject((HallaStorObject) obj);
+
+			ps.println("u" + protocolObject);
 
 			ps.close();
 			os.close();
@@ -135,7 +175,7 @@ public class ClientCRUD implements ICRUD{
 			OutputStream os = clientSocket.getOutputStream();
 			PrintStream ps = new PrintStream(os, true);
 
-				ps.println("d" + id);	
+			ps.println("d" + id);	
 
 			ps.close();
 			os.close();
@@ -164,13 +204,13 @@ public class ClientCRUD implements ICRUD{
 			OutputStream os = clientSocket.getOutputStream();
 			PrintStream ps = new PrintStream(os, true);
 
-				ps.println("gg");
-	
-				String serverMessage = buffReader.readLine();
-	
-				System.out.println("All Ids");
-	
-				ids = serverMessage;
+			ps.println("gg");
+
+			String serverMessage = buffReader.readLine();
+
+			System.out.println("All Ids");
+
+			ids = serverMessage;
 
 			buffReader.close();
 			ps.close();
@@ -202,12 +242,12 @@ public class ClientCRUD implements ICRUD{
 			OutputStream os = clientSocket.getOutputStream();
 			PrintStream ps = new PrintStream(os, true);
 
-				ps.println("l" + id);
-	
-				String serverMessage = buffReader.readLine();
-				
-				lockAccepted = serverMessage.equals("true");
-			
+			ps.println("l" + id);
+
+			String serverMessage = buffReader.readLine();
+
+			lockAccepted = serverMessage.equals("true");
+
 			buffReader.close();
 			ps.close();
 			is.close();
@@ -236,7 +276,7 @@ public class ClientCRUD implements ICRUD{
 			OutputStream os = clientSocket.getOutputStream();
 			PrintStream ps = new PrintStream(os, true);
 
-				ps.println("a" + id);
+			ps.println("a" + id);
 
 			buffReader.close();
 			ps.close();

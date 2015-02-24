@@ -1,0 +1,39 @@
+package edu.enumont.csc230;
+
+import edu.enumont.csc230.Enums.States;
+
+
+public class StateMachine {
+
+public States containsHiNotSubstring(String s){
+		
+		s = s.toUpperCase();
+		
+		States state = States.Initial;
+		
+		for (char c : s.toCharArray()){
+			
+			state = nextState(state, c);
+		}
+		
+		return state;
+	}
+
+	private States nextState(States state, char c) {
+
+		States newState = state;
+		
+		switch (state){
+			case Initial:
+				
+				break;
+		}
+		
+		return newState;
+	}
+	
+	private boolean isPunctuation(char c){
+		
+		return (c == '!') | (c == '.') | (c == '?');
+	}
+}

@@ -1,0 +1,43 @@
+
+public class Driver {
+
+	public static void main(String [] args){
+		
+		Driver driver = new Driver();
+		
+		driver.run("STOP POLLUTION");
+		driver.run("stop pollution");		
+	}
+
+	private void run(String strang) {
+				
+		String encryptedString = encryptString(strang);
+	
+		System.out.println(encryptedString);
+	}
+	
+	private String encryptString(String string) {
+
+		String encryptedString = "";
+		
+		string = string.toUpperCase();
+		
+		for (int i = 0; i < string.length(); i++){
+			
+			int charInt = (char)(string.charAt(i)) - 65;
+			
+			charInt *= 17;
+			charInt += 22;
+			charInt %= 26;
+			
+			char charChar = (char)(charInt + 65);
+			
+			encryptedString += charChar;
+		}
+		
+		return encryptedString;
+	}
+	
+	
+	
+}

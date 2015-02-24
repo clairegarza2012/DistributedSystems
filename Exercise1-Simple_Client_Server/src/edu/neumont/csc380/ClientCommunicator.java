@@ -1,5 +1,6 @@
 package edu.neumont.csc380;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -7,6 +8,10 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.net.Socket;
+import java.nio.ByteBuffer;
+import java.util.zip.ZipException;
+
+import com.hallaLib.HallaZip;
 
 public class ClientCommunicator {
 
@@ -29,28 +34,68 @@ public class ClientCommunicator {
 			InputStream is = socket.getInputStream();
 
 			ps = new PrintStream(os, true);
-			BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
 
-			while (!buffReader.ready()){
+			InputStreamReader inputReader = new InputStreamReader(is);
+
+			BufferedReader buffReader = new BufferedReader(inputReader);
+
+			while (!buffReader.ready()) {
+				// wait until buffered reader is ready
 			}
 
-			String line = buffReader.readLine();
-
-			System.out.println("Message Recieved!");
-			System.out.println("Line: " + line);
-
-			char operation = line.charAt(0);
-
-			String object = line.substring(1);
-
-			synchronized (object) {
-
-				Object obj = doOperation(operation, object);
-
-				if (obj != null){
-					sendObjectToClient(obj);
-				}
+			byte[] bytes = new byte[inputReader.read()];
+			int index = 0;
+			
+			while (buffReader.ready()){
+				
+//				int i = buffReader.read();
+				
+				System.out.println((char)buffReader.read());
+//				char a = (char)i;
+//				
+//				bytes[index] = (byte) a;
+//				
+//				System.out.println(i + " " + a + " " + bytes[index]);
+//				index++;
 			}
+			
+//			String messageFromClient = buffReader.readLine();
+//			System.out.println("Message From Client: " + messageFromClient);
+//
+//			//char operation = messageFromClient.charAt(0);
+//
+//			String object = messageFromClient.substring(1);
+//
+//			char[] objectCharacters = object.toCharArray();
+//
+//			for (int i = 0; i < objectCharacters.length; i++){
+//				objectCharacters[i] = object.charAt(i);
+//				System.out.println(objectCharacters[i] + "  :  " + object.charAt(i));
+//			}
+//
+//			System.out.println("Object Characters: " + objectCharacters.toString());
+//
+//			byte[] objectBytes = new byte[objectCharacters.length];
+//			System.out.println("objectBytes: " + objectBytes);
+//
+//			for (int i = 0 ; i < objectCharacters.length; i++){
+//
+//				objectBytes[i] = (byte) objectCharacters[i];
+//				System.out.println(objectBytes[i]);
+//			}			
+
+			byte[] decompressedMessageFromClient = HallaZip.expand(bytes);
+
+			System.out.println(decompressedMessageFromClient);
+
+			//			synchronized (object) {
+			//
+			//				Object obj = doOperation(operation, object);
+			//
+			//				if (obj != null){
+			//					sendObjectToClient(obj);
+			//				}
+			//			}
 
 			buffReader.close();
 			is.close();
@@ -95,7 +140,6 @@ public class ClientCommunicator {
 		else if (operation == 'u' || operation == 'c'){
 			HallaStorObject obj = protocol.deprotocolObject(object);
 			String id = "" + obj.getId();
-			
 			if (operation == 'u'){
 
 				crud.update(id, obj); 
@@ -106,7 +150,7 @@ public class ClientCommunicator {
 			}
 		}
 		else {
-			
+
 			if (operation == 'r'){
 				o = crud.read(object);
 			}

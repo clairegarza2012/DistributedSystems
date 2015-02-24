@@ -1,0 +1,111 @@
+package edu.enumont.csc230;
+
+import edu.enumont.csc230.Enums.States;
+
+
+public class StateMachine {
+
+public States containsHiNotSubstring(String s){
+		
+		s = s.toUpperCase();
+		
+		States state = States.Initial;
+		
+		for (char c : s.toCharArray()){
+			
+			state = nextState(state, c);
+		}
+		
+		return state;
+	}
+
+	private States nextState(States state, char c) {
+
+		States newState = state;
+		
+		switch (state){
+			case Initial:
+				if (c == 'H'){
+					newState = States.A;
+				}else if (c == 'A'){
+					newState = States.B;
+				}else {
+					newState = States.C;
+				}break;
+			case A:
+				if (c == 'O'){
+					newState = States.D;
+				}else if (c == 'E'){
+					newState = States.E;
+				}else if (c == 'I'){
+					newState = States.F;
+				}else if (c == ' '){
+					newState = States.L;
+				}else {
+					newState = States.C;
+				}break;
+			case B:
+				if (c == 'L'){
+					newState = States.H;
+				}else if (c == ' '){
+					newState = States.L;
+				}else {
+					newState = States.C;
+				}break;
+			case C:
+				newState = (c == ' ')? States.L : States.C;
+				break;
+			case D:
+				if (c == 'W'){
+					newState = States.M;
+				}else if (c == ' '){
+					newState = States.L;
+				}else{
+					newState = States.C;
+				}break;
+			case E:
+				if (c == 'L'){
+					newState = States.P;
+				}else if (c == ' '){
+					newState = States.L;
+				}else {
+					newState = States.C;
+				}break;
+			case F:
+				if (isPunctuation(c)){
+					newState = States.AcceptHi;
+				}else if (c == ' '){
+					newState = States.L;
+				}else {
+					newState = States.C;
+				}break;
+			case H:
+				if (c == 'O'){
+					newState = States.I;
+				}else if (c == ' '){
+					newState = States.L;
+				}else {
+					newState = States.C;
+				}break;
+			case I:
+				if (c == 'H'){
+					newState = States.J;
+				}else if (c == ' '){
+					newState = States.L;
+				}else {
+					newState = States.C;
+				}break;
+			case J:
+				if (c == 'A'){
+					newState = States.K
+				}
+		}
+		
+		return newState;
+	}
+	
+	private boolean isPunctuation(char c){
+		
+		return (c == '!') | (c == '.') | (c == '?');
+	}
+}

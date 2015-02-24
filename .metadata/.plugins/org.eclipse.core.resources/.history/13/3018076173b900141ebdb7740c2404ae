@@ -1,0 +1,32 @@
+package edu.neumont.csc230.tests;
+
+import static org.junit.Assert.*;
+
+import org.junit.Test;
+
+import edu.neumont.csc230.StateMachine;
+
+public class StateMachineTest {
+
+	private StateMachine stateMachine = new StateMachine();
+	
+	@Test
+	public void test() {
+		
+	}
+	
+	@Test
+	public void containsHiNotSubstring(){
+		
+	}
+	
+	@Test
+	public void containsHiSubstring(){
+		
+	}
+	
+	@Test
+	public void doesNotContainHi(){
+		
+	}
+}

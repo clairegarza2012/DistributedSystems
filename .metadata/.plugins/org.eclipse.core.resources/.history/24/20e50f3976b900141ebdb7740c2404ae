@@ -1,0 +1,10 @@
+package edu.neumont.csc230.Enums;
+
+public enum States {
+
+	Approved,
+	Initial,
+	B,
+	C,
+	D,
+}

@@ -1,0 +1,152 @@
+package edu.neumont.csc380;
+
+import java.io.BufferedInputStream;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.net.Socket;
+
+import com.hallaLib.HallaZip;
+
+public class ClientCommunicator {
+
+	private Protocol protocol;
+
+	private PrintStream ps;
+
+	private ICRUD crud;
+
+	public ClientCommunicator(Socket socket){
+
+		this.crud = new ServerCRUD();
+
+		protocol = new Protocol();
+
+		crud = new ServerCRUD();
+
+		try {
+			OutputStream os = socket.getOutputStream();
+			InputStream is = socket.getInputStream();
+
+			ps = new PrintStream(os, true);
+			BufferedInputStream buffReader = new BufferedInputStream(is);
+
+			while (buffReader.available() < 0){
+			}
+
+			int messageFromClient = buffReader.read();
+			
+			System.out.println(messageFromClient);
+			
+			System.out.println("Message Recieved!");
+//			System.out.println("Line: " + line);
+//
+//			byte[] compressedMessageFromClient = toBytes(line);
+//			
+//			System.out.println(compressedMessageFromClient);
+//			
+//			byte[] decompressedMessageFromClient = HallaZip.expand(compressedMessageFromClient);
+//			
+//			System.out.println(decompressedMessageFromClient);
+//			
+//			char operation = line.charAt(0);
+//
+//			String object = line.substring(1);
+
+//			synchronized (object) {
+//
+//				Object obj = doOperation(operation, object);
+//
+//				if (obj != null){
+//					sendObjectToClient(obj);
+//				}
+//			}
+
+			buffReader.close();
+			is.close();
+
+			ps.close();
+			os.close();
+
+			socket.close();
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+	}
+
+	private byte[] toBytes(String line) {
+
+		byte[] bytes = new byte[line.length()];
+		
+		for (int i = 0; i < line.length(); i++){
+			
+			bytes[i] = (byte) line.charAt(i);
+		}
+		
+		return bytes;
+	}
+
+	private void sendObjectToClient(Object obj) {
+
+		char objProposition = obj.toString().charAt(0);
+
+		if (objProposition == 'R' || objProposition == 'D'){
+
+			ps.println(protocol.protocolObject((HallaStorObject) obj));
+		}
+		else {
+
+			ps.println(obj);
+		}
+
+		System.out.println("Sent message to Client: " + obj.toString());
+	}
+
+	private Object doOperation(char operation, String object) {
+
+		Object o = null;
+
+		if (operation == 'g'){
+
+			String ids = crud.getIds();
+
+			o = ids;
+		}
+		else if (operation == 'u' || operation == 'c'){
+			HallaStorObject obj = protocol.deprotocolObject(object);
+			String id = "" + obj.getId();
+			
+			if (operation == 'u'){
+
+				crud.update(id, obj); 
+			}
+			else if (operation == 'c'){
+
+				o = crud.create(id, obj); 
+			}
+		}
+		else {
+			
+			if (operation == 'r'){
+				o = crud.read(object);
+			}
+			else if (operation == 'd'){
+				crud.delete(object);
+			}
+			else if (operation == 'l'){
+				o = crud.lock(object);
+			}
+			else if (operation == 'a'){
+				crud.unlock(object);
+			}
+		}
+
+		return o;
+	}
+
+}

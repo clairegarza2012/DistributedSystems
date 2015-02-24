@@ -1,0 +1,52 @@
+package edu.neumont.csc230.tests;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import edu.neumont.csc230.StateMachine;
+import edu.neumont.csc230.Enums.States;
+
+public class StateMachineTest {
+
+	private StateMachine stateMachine = new StateMachine();
+
+	@Test
+	public void test() {
+
+		String s = "HI";
+
+		States state = stateMachine.containsHiNotSubstring(s);
+
+		Assert.assertEquals(States.Approved, state);
+	}
+
+	@Test
+	public void containsHiNotSubstring(){
+
+		String s = "HI";
+
+		States state = stateMachine.containsHiNotSubstring(s);
+
+		Assert.assertEquals(States.Approved, state);
+	}
+
+	@Test
+	public void containsHiSubstring(){
+
+		String s = "HI";
+
+		States state = stateMachine.containsHiNotSubstring(s);
+
+		Assert.assertEquals(States.Approved, state);
+	}
+
+	@Test
+	public void doesNotContainHi(){
+
+		String s = "HI";
+
+		States state = stateMachine.containsHiNotSubstring(s);
+
+		Assert.assertEquals(States.Approved, state);
+	}
+}

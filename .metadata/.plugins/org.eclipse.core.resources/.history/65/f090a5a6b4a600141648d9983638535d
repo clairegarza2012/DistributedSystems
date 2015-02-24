@@ -1,0 +1,39 @@
+package edu.neumont.csc380;
+
+import com.google.gson.Gson;
+import com.hallaLib.HallaZip;
+
+public class Protocol {
+
+	private Gson gson;
+	
+	public Protocol(){
+		gson = new Gson();
+	}
+	
+	public String protocolObject(HallaStorObject obj){
+		
+		String jsonObject = gson.toJson(obj);
+		
+		HallaZip.compress(jsonObject.getBytes());
+				
+		return gson.toJson(obj);
+	}
+	
+	public HallaStorObject deprotocolObject(String obj){
+		
+		HallaStorObject o = null;
+				
+		char prop = obj.charAt(2);
+		
+		if (prop == 'm'){
+			o = gson.fromJson(obj, RaceCar.class);
+		}
+		else {
+			o = gson.fromJson(obj, Driver.class);
+		}
+		
+		return o;	
+	}
+	
+}
