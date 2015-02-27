@@ -1,0 +1,18 @@
+package edu.neumont.cscs230;
+
+import edu.neumont.cscs230.Phrases.NounPhrase;
+import edu.neumont.cscs230.Phrases.VerbPhrase;
+
+public class Sentence {
+
+	private String s;
+	
+	public Sentence(NounPhrase nounPhrase, VerbPhrase verbPhrase){
+		s = nounPhrase.getNounPhrase() + " " + verbPhrase.getVerbPhrase();
+	}
+	
+	public String getSentence(){
+		return s;
+	}
+	
+}

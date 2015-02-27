@@ -1,0 +1,31 @@
+package edu.neumont.cscs230;
+
+import java.util.ArrayList;
+
+public class Phrase {
+
+	public static boolean canForm(ArrayList<Word> subArray) {
+		
+		if(subArray.size() == 2){
+			if (subArray.get(0).toString().equals("Article") && subArray.get(1).toString().equals("Noun")){
+				return true;
+			}
+			else if (subArray.get(0).toString().equals("Verb") && subArray.get(1).toString().equals("NounPhrase")){
+				return true;
+			}
+		}
+		else if (subArray.size() == 4){
+			
+		}
+		
+		
+		return false;
+	}
+
+	public static Word makePhrase(ArrayList<Word> subArray) {
+
+		
+		return null;
+	}
+
+}

@@ -1,0 +1,21 @@
+package edu.neumont.cscs230;
+
+import java.util.ArrayList;
+
+import edu.neumont.cscs230.Phrases.NounPhrase;
+
+public abstract class Phrase {
+	
+	public boolean CanBePhrase(ArrayList<Word> words){
+		
+		if (words.size() == 1){
+			return false;
+		}
+		else if (words.size() == 2){
+			if (words.get(0).toString().equals("Article") && words.get(1).toString().equals("Noun")){
+				return true;
+			}
+		}
+	}
+	
+}

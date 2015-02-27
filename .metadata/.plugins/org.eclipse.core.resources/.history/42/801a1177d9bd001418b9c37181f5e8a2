@@ -1,0 +1,17 @@
+package edu.neumont.cscs230.words;
+
+import edu.neumont.cscs230.Word;
+
+public class Verb extends Word{
+
+	private String verb;
+	
+	public Verb(String s){
+		verb = s;
+	}
+	
+	public String getVerb(){
+		return verb;
+	}
+
+}

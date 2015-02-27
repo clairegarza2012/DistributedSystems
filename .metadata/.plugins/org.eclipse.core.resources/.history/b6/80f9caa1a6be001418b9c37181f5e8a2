@@ -1,0 +1,32 @@
+package edu.neumont.cscs230;
+
+import edu.neumont.cscs230.Phrases.NounPhrase;
+import edu.neumont.cscs230.Phrases.VerbPhrase;
+import edu.neumont.cscs230.words.ProNoun;
+
+public class Sentence extends Word{
+
+	private String s;
+	
+	public Sentence(NounPhrase nounPhrase, VerbPhrase verbPhrase){
+		s = nounPhrase.getNounPhrase() + " " + verbPhrase.getVerbPhrase();
+	}
+	
+	public Sentence(ProNoun pronoun, VerbPhrase verbPhrase){
+		s = pronoun.getProNoun() + " " + verbPhrase.getVerbPhrase();
+	}
+	
+	public Sentence(VerbPhrase verbPhrase){
+		s = verbPhrase.getVerbPhrase();
+	}
+	
+	public String getSentence(){
+		return s;
+	}
+
+	@Override
+	public String toString() {
+		return "Sentence";
+	}
+	
+}

@@ -1,0 +1,55 @@
+package edu.neumont.cscs230.Phrases;
+
+import edu.neumont.cscs230.Word;
+import edu.neumont.cscs230.words.Noun;
+import edu.neumont.cscs230.words.ProNoun;
+import edu.neumont.cscs230.words.Verb;
+
+public class VerbPhrase extends Word{
+
+	private String s;
+	private String response;
+	
+	public VerbPhrase(Verb verb){
+		s = verb.getVerb();
+		response = verb.getResponse();
+	}
+	
+	public VerbPhrase(Verb verb, NounPhrase nounPhrase){
+		s = verb.getVerb() + " " + nounPhrase.getNounPhrase();
+		response = verb.getResponse() + " " + nounPhrase.getResponse();
+	}
+	
+	public VerbPhrase(VerbPhrase verbPhrase, NounPhrase nounPhrase){
+		s = verbPhrase.getVerbPhrase() + " " + nounPhrase.getNounPhrase();
+		response = verbPhrase.getResponse() + " " + nounPhrase.getResponse();
+	}
+	
+	public VerbPhrase(ProNoun pronoun, Verb verb, Noun noun){
+		s = pronoun.getProNoun() + " " + verb.getVerb() + " " + noun.getNoun();
+	}
+	
+	public VerbPhrase(Verb v, ProNoun pronoun){
+		s = v.getVerb() + " " + pronoun.getProNoun();
+	}
+	
+	public VerbPhrase(ProNoun pronoun, Verb v){
+		s = pronoun.getProNoun() + " " + v.getVerb();
+	}
+	
+	public String getVerbPhrase(){
+		return s;
+	}
+
+	@Override
+	public String toString() {
+		return "VerbPhrase";
+	}
+
+	@Override
+	public String getResponse() {
+
+		return response;
+	}
+	
+}

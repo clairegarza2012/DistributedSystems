@@ -1,0 +1,14 @@
+package edu.neumont.cscs230.words;
+
+public class Noun {
+
+	private String noun;
+	
+	public Noun(String s){
+		noun = s;
+	}
+	
+	public String getNoun(){
+		return noun;
+	}
+}

@@ -1,0 +1,17 @@
+package edu.neumont.cscs230;
+
+public class Driver {
+
+	
+	public static void main(String[] args){
+		
+		Driver drive = new Driver();
+		drive.run();
+	}
+	
+	public void run(){
+		
+		
+	}
+	
+}

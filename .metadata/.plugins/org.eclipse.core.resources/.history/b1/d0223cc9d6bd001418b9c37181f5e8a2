@@ -1,0 +1,15 @@
+package edu.neumont.cscs230.words;
+
+public class Proposition {
+
+	private String s;
+	
+	public Proposition(String s){
+		this.s = s;
+	}
+	
+	public String getProposition(){
+		return s;
+	}
+	
+}

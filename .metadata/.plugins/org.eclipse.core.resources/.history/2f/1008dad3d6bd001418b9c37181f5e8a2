@@ -1,0 +1,24 @@
+package edu.neumont.cscs230;
+
+public abstract class Word {
+
+	
+	
+	public Word getLeftClass(String s){
+		
+		Word word = null;
+		
+		if (isVerb(s)){
+			
+		}else if (isNoun(s)){
+			
+		}else if (isProposition(s)){
+			
+		}else if (isArticle(s)){
+			
+		}		
+			
+		return word;
+	}
+	
+}

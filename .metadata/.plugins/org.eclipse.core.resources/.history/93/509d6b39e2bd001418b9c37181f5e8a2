@@ -1,0 +1,10 @@
+package edu.neumont.cscs230;
+
+public abstract class Phrase {
+
+	public Phrase getType(Word word){
+		
+		return null;
+	}
+	
+}

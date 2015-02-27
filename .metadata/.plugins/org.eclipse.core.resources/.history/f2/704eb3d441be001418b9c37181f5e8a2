@@ -1,0 +1,117 @@
+package edu.neumont.cscs230;
+
+import java.util.ArrayList;
+
+import edu.neumont.cscs230.Phrases.NounPhrase;
+import edu.neumont.cscs230.Phrases.VerbPhrase;
+import edu.neumont.cscs230.words.Article;
+import edu.neumont.cscs230.words.Noun;
+import edu.neumont.cscs230.words.ProNoun;
+import edu.neumont.cscs230.words.Proposition;
+import edu.neumont.cscs230.words.Verb;
+
+public class Phrase {
+
+	public static boolean canForm(ArrayList<Word> subArray) {
+		
+		if (subArray.size() == 1){
+			if (subArray.get(0).toString().equals("Verb")){
+				return true;
+			}
+		}
+		else if(subArray.size() == 2){
+			if (subArray.get(0).toString().equals("Article") && subArray.get(1).toString().equals("Noun")){
+				return true;
+			}
+			else if (subArray.get(0).toString().equals("Verb") && subArray.get(1).toString().equals("NounPhrase")){
+				return true;
+			}
+			else if (subArray.get(0).toString().equals("VerbPhrase") && subArray.get(1).toString().equals("NounPhrase")){
+				return true;
+			}
+			else if (subArray.get(0).toString().equals("NounPhrase") && subArray.get(1).toString().equals("VerbPhrase")){
+				return true;
+			}
+			else if (subArray.get(0).toString().equals("ProNoun") && subArray.get(1).toString().equals("Verb")){
+				return true;
+			}
+			else if (subArray.get(0).toString().equals("Verb") && subArray.get(1).toString().equals("ProNoun")){
+				return true;
+			}
+			else if (subArray.get(0).toString().equals("ProNoun") && subArray.get(1).toString().equals("VerbPhrase")){
+				return true;
+			}
+		}
+		else if (subArray.size() == 4){
+			if (subArray.get(0).toString().equals("Article") && subArray.get(1).toString().equals("Noun") && subArray.get(2).toString().equals("Proposition") && subArray.get(3).toString().equals("NounPhrase")){
+				return true;
+			}
+		}
+		
+		return false;
+	}
+
+	public static Word makePhrase(ArrayList<Word> subArray) {
+		
+		if (subArray.size() == 1){
+			if (subArray.get(0).toString().equals("Verb")){
+				Verb verb = (Verb)subArray.get(0);
+				return new VerbPhrase(verb);
+			}
+			else if (subArray.get(0).toString().equals("VerbPhrase")){
+				VerbPhrase verbPhrase = (VerbPhrase)subArray.get(0);
+				return new Sentence(verbPhrase);
+			}
+		}
+		else if(subArray.size() == 2){
+			if (subArray.get(0).toString().equals("Article") && subArray.get(1).toString().equals("Noun")){
+				Article article = (Article)subArray.get(0);
+				Noun noun = (Noun)subArray.get(1);
+				return new NounPhrase(article, noun);
+			}
+			else if (subArray.get(0).toString().equals("Verb") && subArray.get(1).toString().equals("NounPhrase")){
+				Verb verb = (Verb)subArray.get(0);
+				NounPhrase nounPhrase = (NounPhrase)subArray.get(1);
+				return new VerbPhrase(verb, nounPhrase);
+			}
+			else if (subArray.get(0).toString().equals("VerbPhrase") && subArray.get(1).toString().equals("NounPhrase")){
+				VerbPhrase verbPhrase = (VerbPhrase)subArray.get(0);
+				Verb verb = new Verb(verbPhrase.getVerbPhrase());
+				NounPhrase nounPhrase = (NounPhrase)subArray.get(1);
+				return new VerbPhrase(verb, nounPhrase);
+			}
+			else if (subArray.get(0).toString().equals("NounPhrase") && subArray.get(1).toString().equals("VerbPhrase")){
+				NounPhrase nounPhrase = (NounPhrase)subArray.get(0);
+				VerbPhrase verbPhrase = (VerbPhrase)subArray.get(1);
+				return new Sentence(nounPhrase, verbPhrase);
+			}
+			else if (subArray.get(0).toString().equals("ProNoun") && subArray.get(1).toString().equals("Verb")){
+				ProNoun proNoun = (ProNoun)subArray.get(0);
+				Verb verb = (Verb)subArray.get(1);
+				return new Verb(proNoun, verb);
+			}
+			else if (subArray.get(0).toString().equals("Verb") && subArray.get(1).toString().equals("ProNoun")){
+				Verb verb = (Verb)subArray.get(0);
+				ProNoun proNoun = (ProNoun)subArray.get(1);
+				return new Verb(verb, proNoun);
+			}
+			else if (subArray.get(0).toString().equals("ProNoun") && subArray.get(1).toString().equals("VerbPhrase")){
+				ProNoun pronoun = (ProNoun)subArray.get(0);
+				VerbPhrase verbPhrase = (VerbPhrase)subArray.get(1);
+				return new Sentence(pronoun, verbPhrase);
+			}
+		}
+		else if (subArray.size() == 4){
+			if (subArray.get(0).toString().equals("Article") && subArray.get(1).toString().equals("Noun") && subArray.get(2).toString().equals("Proposition") && subArray.get(3).toString().equals("NounPhrase")){
+				Article article = (Article)subArray.get(0);
+				Noun noun = (Noun)subArray.get(1);
+				Proposition prop = (Proposition)subArray.get(2);
+				NounPhrase nounPhrase = (NounPhrase)subArray.get(3);
+				return new NounPhrase(article, noun, prop, nounPhrase);
+			}
+		}
+		
+		return null;
+	}
+
+}

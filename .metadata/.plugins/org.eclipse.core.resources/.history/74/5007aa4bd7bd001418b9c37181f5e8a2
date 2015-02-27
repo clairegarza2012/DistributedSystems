@@ -1,0 +1,43 @@
+package edu.neumont.cscs230;
+
+public abstract class Word {
+
+	public Word getLeftClass(String s){
+		
+		Word word = null;
+		s.toLowerCase();
+		
+		if (isVerb(s)){
+			
+		}else if (isNoun(s)){
+			
+		}else if (isProposition(s)){
+			
+		}else if (isArticle(s)){
+			
+		}		
+			
+		return word;
+	}
+
+	private boolean isArticle(String s) {
+
+		return s.equals("a") || s.equals("the");
+	}
+
+	private boolean isProposition(String s) {
+
+		return s.equals("with");
+	}
+
+	private boolean isNoun(String s) {
+
+		return s.equals("dog") || s.equals("fish") || s.equals("cat");
+	}
+
+	private boolean isVerb(String s) {
+
+		return s.equals("bites") || s.equals("chases");
+	}
+	
+}

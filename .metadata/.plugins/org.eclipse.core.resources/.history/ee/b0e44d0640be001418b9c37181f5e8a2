@@ -1,0 +1,93 @@
+package edu.neumont.cscs230;
+
+import java.util.ArrayList;
+//import java.util.Scanner;
+
+public class Driver {
+
+	//private static Scanner scan;
+
+	public static void main(String[] args){
+
+		//scan = new Scanner(System.in);
+
+		Driver drive = new Driver();
+		drive.run();
+	}
+
+	public void run(){
+
+
+		//String s = scan.nextLine();
+
+		String s = "I am a dog.";
+
+		String[] words = s.split("\\s|\\.|!|\\?");
+
+		ArrayList<Word> wordsList = new ArrayList<Word>();
+
+		for (String i : words){
+			System.out.print(i + ": ");
+			Word word = Word.getType(i);
+			wordsList.add(word);
+			System.out.println(word);
+		}
+		System.out.println();
+
+		int endIndex = wordsList.size() - 1;
+		int startIndex = wordsList.size() - 1;
+
+		boolean properSentence = false;
+		boolean endLoop = false;
+
+		int count = 0;
+		
+		while (!endLoop && count < 5){
+
+			ArrayList<Word> subArray = getSubArray(wordsList, startIndex, endIndex);
+			boolean canForm = Phrase.canForm(subArray);
+
+			if (canForm){					
+				Word madePhrase = Phrase.makePhrase(subArray);
+
+				System.out.println("made: " + madePhrase.toString());
+
+				if (madePhrase.toString().equals("Sentence")){
+					Sentence sentence = (Sentence)madePhrase;
+					System.out.println(sentence.getSentence());
+					endLoop = true;
+					properSentence = (wordsList.size() > 1);
+				}
+
+				wordsList.removeAll(subArray);
+				wordsList.add(startIndex, madePhrase);
+
+				endIndex = startIndex - 1;
+			}
+
+			startIndex--;
+
+			if (startIndex == -1){
+				endIndex = wordsList.size() - 1;
+				startIndex = wordsList.size() - 1;
+			}
+			
+			count++;
+			
+			System.out.println(count);
+		}		
+
+	}
+
+	private ArrayList<Word> getSubArray(ArrayList<Word> originalArray, int startIndex, int endIndex){
+		ArrayList<Word> newArray = new ArrayList<Word>();
+
+		for (int i = startIndex; i <= endIndex; i++){
+			System.out.print(originalArray.get(i) + ", ");
+			newArray.add(originalArray.get(i));
+		}
+		System.out.println();
+		return newArray;
+	}
+
+}

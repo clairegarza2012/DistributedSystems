@@ -1,0 +1,21 @@
+package edu.neumont.cscs230;
+
+import java.util.ArrayList;
+
+public class Phrase {
+
+	public static boolean canForm(ArrayList<Word> subArray) {
+		
+		
+		
+		
+		return false;
+	}
+
+	public static Word makePhrase(ArrayList<Word> subArray) {
+
+		
+		return null;
+	}
+
+}

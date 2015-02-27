@@ -1,0 +1,12 @@
+package edu.neumont.cscs230;
+
+public class NounPhrase {
+
+	public NounPhrase(ArticleNoun articleNoun){
+		
+	}
+	
+	public NounPhrase(ArticleNoun articleNoun, Proposition proposition, NounPhrase nounPhrase){
+		
+	}
+}

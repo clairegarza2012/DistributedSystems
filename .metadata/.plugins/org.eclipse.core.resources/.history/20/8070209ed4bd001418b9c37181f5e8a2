@@ -1,0 +1,18 @@
+package edu.neumont.cscs230;
+
+public class NounPhrase {
+
+	private String s;
+	
+	public NounPhrase(Article article, Noun noun){
+		s = article + " " + noun;
+	}
+	
+	public NounPhrase(Article article, Noun noun, Proposition proposition, NounPhrase nounPhrase){
+		s = article + " " + noun + " " + proposition + " " + nounPhrase;
+	}
+	
+	public String getNounPhrase(){
+		return s;
+	}
+}

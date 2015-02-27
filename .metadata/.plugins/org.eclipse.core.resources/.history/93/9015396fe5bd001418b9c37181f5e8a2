@@ -1,0 +1,55 @@
+package edu.neumont.cscs230;
+
+import java.util.ArrayList;
+//import java.util.Scanner;
+
+public class Driver {
+
+	//private static Scanner scan;
+	
+	public static void main(String[] args){
+		
+		//scan = new Scanner(System.in);
+		
+		Driver drive = new Driver();
+		drive.run();
+	}
+	
+	public void run(){
+		
+		
+			//String s = scan.nextLine();
+			
+			String s = "The dog bites the fish!?!?";
+
+			String[] words = s.split("\\s|\\.|!|\\?");
+						
+			ArrayList<Word> wordsList = new ArrayList<Word>();
+			
+			for (String i : words){
+				System.out.print(i + ": ");
+				Word word = Word.getType(i);
+				wordsList.add(word);
+				System.out.println(word);
+			}
+			System.out.println();
+			
+			ArrayList<Word> phrases = new ArrayList<Word>();
+			
+			boolean notSentence = true;
+			
+			int endIndex = phrases.size()-1;
+			int startIndex = 0;
+			
+			while (notSentence){
+				Phrase.canForm(getSubArray(startIndex, endIndex));
+			}
+			
+	}
+	
+	
+	private ArrayList<Word> getSubArray(int startIndex, int endIndex){
+		
+	}
+	
+}
