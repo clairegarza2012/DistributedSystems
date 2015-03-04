@@ -1,0 +1,148 @@
+package edu.neumont.csc230;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Driver {
+
+	private static Scanner scan;
+
+	public static void main(String[] args){
+
+		scan = new Scanner(System.in);
+
+		Driver drive = new Driver();
+		drive.run();
+	}
+
+	public void run(){
+
+		int parseAttempts = 0;
+		int sentenceIndex = -1;
+		Sentence previousSentence = null;
+		ArrayList<Sentence> sentences = new ArrayList<Sentence>();
+		
+		while (scan.hasNext()){
+			String s = scan.nextLine();
+
+			String[] words = s.split("\\s|\\.|!|\\?|,");
+
+			ArrayList<Word> wordsList = new ArrayList<Word>();
+
+			for (String i : words){
+				Word word = Word.getType(i);
+				wordsList.add(word);
+			}
+
+			int endIndex = wordsList.size() - 1;
+			int startIndex = wordsList.size() - 1;
+
+			boolean properSentence = false;
+			boolean endLoop = false;
+
+			int count = 0;
+
+			while (!endLoop && count < 20 && isGood(wordsList)){
+
+				ArrayList<Word> subArray = getSubArray(wordsList, startIndex, endIndex);
+				boolean canForm = Phrase.canForm(subArray);
+
+				if (canForm){					
+					Word madePhrase = Phrase.makePhrase(subArray);
+
+					if ( (madePhrase.toString().equals("VerbPhrase") || madePhrase.toString().equals("Sentence")) && startIndex != 0){
+						
+						ArrayList<Word> subArray2 = getSubArray(wordsList, startIndex - 1, endIndex);
+						boolean canFormVerbPhrase = Phrase.canForm(subArray2);
+
+						if (canFormVerbPhrase){
+							Word verbPhrase = Phrase.makePhrase(subArray2);
+
+							wordsList.removeAll(subArray2);
+							wordsList.add(startIndex - 1, verbPhrase);
+
+							endLoop = verbPhrase.toString().equals("Sentence");
+							properSentence = (wordsList.size() == 1);
+
+							endIndex = startIndex - 2;
+						}
+						else{
+
+							wordsList.removeAll(subArray);
+							wordsList.add(startIndex, madePhrase);
+
+							endLoop = madePhrase.toString().equals("Sentence");
+							properSentence = (wordsList.size() == 1);
+
+							endIndex = startIndex - 1;
+						}
+					}
+					else {
+
+						wordsList.removeAll(subArray);
+						wordsList.add(startIndex, madePhrase);
+
+						endLoop = madePhrase.toString().equals("Sentence");
+						properSentence = (wordsList.size() == 1);
+
+						endIndex = startIndex - 1;
+					}
+
+				}
+
+				startIndex--;
+
+				if (startIndex == -1){
+					endIndex = wordsList.size() - 1;
+					startIndex = wordsList.size() - 1;
+				}
+
+				count++;
+			}		
+
+
+			String response = "";
+			
+			if (properSentence){
+				Sentence sentence = (Sentence)wordsList.get(0);
+				response = sentence.getResponse();
+				
+				sentences.add(sentence);
+				sentenceIndex++;
+				
+				previousSentence = sentence;
+				parseAttempts = 0;
+			}else{
+				if (parseAttempts > 2){
+					previousSentence = sentences.get(--sentenceIndex);
+					parseAttempts = -1;
+				}
+				response = previousSentence.getResponse(++parseAttempts);
+			}
+			
+			System.out.println(response);
+		}
+	}
+
+	private boolean isGood(ArrayList<Word> wordsList) {
+		
+		for (Word s : wordsList){
+			if (s == null){
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
+	private ArrayList<Word> getSubArray(ArrayList<Word> originalArray, int startIndex, int endIndex){
+		ArrayList<Word> newArray = new ArrayList<Word>();
+
+		for (int i = startIndex; i <= endIndex; i++){
+			newArray.add(originalArray.get(i));
+		}
+
+		return newArray;
+	}
+
+}

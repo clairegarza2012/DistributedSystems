@@ -54,5 +54,5 @@ public class VerbPhrase extends Word{
 
 		return response;
 	}
-	
+
 }

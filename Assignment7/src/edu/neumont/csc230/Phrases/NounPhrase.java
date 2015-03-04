@@ -34,4 +34,5 @@ public class NounPhrase extends Word{
 
 		return response;
 	}
+
 }

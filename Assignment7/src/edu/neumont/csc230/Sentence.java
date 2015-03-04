@@ -24,6 +24,11 @@ public class Sentence extends Word{
 		response = verbPhrase.getResponse();
 	}
 	
+	public Sentence(NounPhrase nounPhrase){
+		s = nounPhrase.getNounPhrase();
+		response = nounPhrase.getResponse();
+	}
+	
 	public String getSentence(){
 		return s;
 	}
@@ -33,12 +38,31 @@ public class Sentence extends Word{
 		return "Sentence";
 	}
 
-	@Override
-	public String getResponse() {
+	public String getResponse(int num, Sentence prevSent) {
 
-		if (response.startsWith("you")){
-			if (response.contains("like")){
-				response = "Why do " + response + "?";
+		switch (num){
+			case 0:
+				return getResponseZero();
+			case 1:
+				return getResponseOne(prevSent);
+			case 2:
+				return getResponseTwo();
+			case 3:
+				return getResponseThree();
+			default:
+				return getResponseZero();
+		}
+	}
+
+	private String getResponseThree() {
+		
+		if (response.startsWith("i")){
+			if (response.contains("like") || response.contains("hate")){
+				response = response.replace(" too!", "");
+				String responseYou =  response.replaceFirst("i", "you");
+				response = "Yeah, I just said " + response + ", because you said that " + responseYou + ".\n";
+				responseYou = responseYou.replace("you ", "");
+				response += "I don't actually " + responseYou + ".";
 			} else if (response.contains("are")){
 				response = response.replace("are", "like being");
 				response = "How do " + response + "?";
@@ -52,6 +76,65 @@ public class Sentence extends Word{
 		}
 		
 		return response;
+	}
+
+	private String getResponseTwo() {
+	
+		response = s + " too!";
+		return response;
+	}
+
+	private String getResponseOne(Sentence prevSent) {
+		
+		if (response.contains("you")){
+			if (response.contains("like") || response.contains("hate")){
+				String[] responseArray = response.split("\\s|\\?");
+				response = response.replace("Why do", "What about " + responseArray[responseArray.length - 1] + " makes");
+			} else if (response.contains("are")){
+				response = response.replace("are", "like being");
+				response = "How do " + response + "?";
+			}
+		}
+		else if (response.contains("chases")){
+			response = "Sounds Fun!";
+		}
+		else if (response.contains("bites")){
+			response = "Ouch!!";
+		}
+		if (s.contains("flavor") || s.contains("taste")){
+			String[] prevSentArray = prevSent.getSentence().split("\\s|\\.|\\?|!");
+			response = "What about " + s + " of " + prevSentArray[prevSentArray.length - 1] + " do you like?";
+		}
+		
+		return response;
+	}
+
+	private String getResponseZero() {
+		
+		if (response.startsWith("you")){
+			if (response.contains("like") || response.contains("hate")){
+				response = "Why do " + response + "?";
+			} else if (response.contains("are")){
+				response = response.replace("are", "like being");
+				response = "How do " + response + "?";
+			}
+		}
+		else if (response.contains("chases")){
+			response = "Sounds Fun!";
+		}
+		else if (response.contains("bites")){
+			response = "Ouch!!";
+		}
+		else if (response.contains("flavor") || response.contains("taste")){
+			response = "Interesting. What else do you like?";
+		}
+		
+		return response;
+	}
+
+	@Override
+	public String getResponse() {
+		return getResponseZero();
 	}
 	
 }

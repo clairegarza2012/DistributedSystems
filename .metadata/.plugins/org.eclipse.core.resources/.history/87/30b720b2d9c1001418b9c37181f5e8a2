@@ -1,0 +1,123 @@
+package edu.neumont.csc230;
+
+import edu.neumont.csc230.Phrases.NounPhrase;
+import edu.neumont.csc230.Phrases.VerbPhrase;
+import edu.neumont.csc230.words.ProNoun;
+
+public class Sentence extends Word{
+
+	private String s;
+	private String response;
+	
+	public Sentence(NounPhrase nounPhrase, VerbPhrase verbPhrase){
+		s = nounPhrase.getNounPhrase() + " " + verbPhrase.getVerbPhrase();
+		response = nounPhrase.getResponse() + " " + verbPhrase.getResponse();
+	}
+	
+	public Sentence(ProNoun pronoun, VerbPhrase verbPhrase){
+		s = pronoun.getProNoun() + " " + verbPhrase.getVerbPhrase();
+		response = pronoun.getResponse() + " " + verbPhrase.getResponse();
+	}
+	
+	public Sentence(VerbPhrase verbPhrase){
+		s = verbPhrase.getVerbPhrase();
+		response = verbPhrase.getResponse();
+	}
+	
+	public String getSentence(){
+		return s;
+	}
+
+	@Override
+	public String toString() {
+		return "Sentence";
+	}
+
+	public String getResponse(int num) {
+
+		switch (num){
+			case 0:
+				return getResponseZero();
+			case 1:
+				return getResponseOne();
+			case 2:
+				return getResponseTwo();
+			case 3:
+				return getResponseThree();
+			default:
+				return getResponseZero();
+		}
+	}
+
+	private String getResponseThree() {
+		
+		if (response.startsWith("you")){
+			if (response.contains("like") || response.contains("hate")){
+				response = "Why do " + response + "?";
+			} else if (response.contains("are")){
+				response = response.replace("are", "like being");
+				response = "How do " + response + "?";
+			}
+		}
+		else if (response.contains("chases")){
+			response = "Sounds Fun!";
+		}
+		else if (response.contains("bites")){
+			response = "Ouch!!";
+		}
+		
+		return response;
+	}
+
+	private String getResponseTwo() {
+	
+		
+		return s;
+	}
+
+	private String getResponseOne() {
+		
+		if (response.startsWith("you")){
+			if (response.contains("like") || response.contains("hate")){
+				response = "What makes " + response + "?";
+			} else if (response.contains("are")){
+				response = response.replace("are", "like being");
+				response = "How do " + response + "?";
+			}
+		}
+		else if (response.contains("chases")){
+			response = "Sounds Fun!";
+		}
+		else if (response.contains("bites")){
+			response = "Ouch!!";
+		}
+		
+		return response;
+	}
+
+	private String getResponseZero() {
+		
+		if (response.startsWith("you")){
+			if (response.contains("like") || response.contains("hate")){
+				response = "Why do " + response + "?";
+			} else if (response.contains("are")){
+				response = response.replace("are", "like being");
+				response = "How do " + response + "?";
+			}
+		}
+		else if (response.contains("chases")){
+			response = "Sounds Fun!";
+		}
+		else if (response.contains("bites")){
+			response = "Ouch!!";
+		}
+		
+		return response;
+	}
+
+	@Override
+	public String getResponse() {
+		return getResponseZero();
+	}
+	
+}

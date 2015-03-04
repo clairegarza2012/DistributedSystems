@@ -44,12 +44,12 @@ public abstract class Word {
 
 	private static boolean isNoun(String s) {
 
-		return s.equals("dog") || s.equals("fish") || s.equals("cat") || s.equals("cheese");
+		return s.equals("dog") || s.equals("fish") || s.equals("cat") || s.equals("cheese") || s.equals("golf") || s.equals("flavor") || s.equals("taste");
 	}
 
 	private static boolean isVerb(String s) {
 
-		return s.equals("bites") || s.equals("chases") || s.equals("am") || s.equals("like");
+		return s.equals("bites") || s.equals("chases") || s.equals("am") || s.equals("like") || s.equals("hate");
 	}
 
 	public abstract String toString();	

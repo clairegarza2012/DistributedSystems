@@ -21,6 +21,9 @@ public class Phrase {
 			else if (subArray.get(0).toString().equals("VerbPhrase")){
 				return true;
 			}
+			else if (subArray.get(0).toString().equals("NounPhrase")){
+				return true;
+			}
 		}
 		else if(subArray.size() == 2){
 			if (subArray.get(0).toString().equals("Article") && subArray.get(1).toString().equals("Noun")){
@@ -70,6 +73,10 @@ public class Phrase {
 			else if (subArray.get(0).toString().equals("VerbPhrase")){
 				VerbPhrase verbPhrase = (VerbPhrase)subArray.get(0);
 				return new Sentence(verbPhrase);
+			}
+			else if (subArray.get(0).toString().equals("NounPhrase")){
+				NounPhrase nounPhrase = (NounPhrase)subArray.get(0);
+				return new Sentence(nounPhrase);
 			}
 		}
 		else if(subArray.size() == 2){
